@@ -47,7 +47,7 @@ class DemoState extends CustomState<Demo> {
     return CustomScaffold(
       body: Container(
         alignment: Alignment.center,
-        child: Text('12a'),
+        child: const Text(''),
       ),
     );
   }
