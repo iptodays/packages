@@ -4,18 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:imobile_ads/bannerAd.dart';
+import 'package:imobile_ads/enum.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
-
-enum ImobileAdsState {
-  loaded, // 加载完成
-  loadFailed, // 加载失败
-  showed, // 已显示
-  showFailed, // 显示失败
-  willDismiss, // 即将消失
-  dismissed, // 消失
-  skipped, // 跳过
-  earnedReward, // 获得奖励
-}
 
 class ImobileAds {
   static const MethodChannel _channel = MethodChannel('imobile_ads');
@@ -120,7 +111,7 @@ class ImobileAds {
   }
 
   /// 横幅广告
-  static AdWidget bannerAd({
+  static Widget bannerAd({
     required String id,
     AdSize size = AdSize.fullBanner,
     void Function(ImobileAdsState, AdError?)? callback,
@@ -131,40 +122,10 @@ class ImobileAds {
           ? 'ca-app-pub-3940256099942544/6300978111'
           : 'ca-app-pub-3940256099942544/2934735716';
     }
-    return AdWidget(
-      ad: BannerAd(
-        size: size,
-        adUnitId: unitId,
-        listener: BannerAdListener(
-          onAdLoaded: (ad) {
-            if (callback != null) {
-              callback(ImobileAdsState.loaded, null);
-            }
-          },
-          onAdFailedToLoad: (ad, error) {
-            ad.dispose();
-            if (callback != null) {
-              callback(ImobileAdsState.showFailed, error);
-            }
-          },
-          onAdOpened: (ad) {
-            if (callback != null) {
-              callback(ImobileAdsState.showed, null);
-            }
-          },
-          onAdClosed: (ad) {
-            if (callback != null) {
-              callback(ImobileAdsState.dismissed, null);
-            }
-          },
-          onAdWillDismissScreen: (ad) {
-            if (callback != null) {
-              callback(ImobileAdsState.willDismiss, null);
-            }
-          },
-        ),
-        request: const AdRequest(),
-      ),
+    return CustomBannerAd(
+      id: unitId,
+      size: size,
+      callback: callback,
     );
   }
 
