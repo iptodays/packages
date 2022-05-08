@@ -8,6 +8,10 @@ import 'package:imobile_ads/bannerAd.dart';
 import 'package:imobile_ads/enum.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
+export 'package:google_mobile_ads/google_mobile_ads.dart';
+export 'package:imobile_ads/enum.dart';
+export 'package:unity_ads_plugin/unity_ads_plugin.dart';
+
 class ImobileAds {
   static const MethodChannel _channel = MethodChannel('imobile_ads');
 
