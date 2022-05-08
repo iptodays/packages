@@ -53,7 +53,5 @@ class DemoState extends CustomState<Demo> {
   }
 
   @override
-  Future<void> loadData() async {
-    print('loadData');
-  }
+  Future<void> loadData() async {}
 }
