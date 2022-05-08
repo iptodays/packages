@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
@@ -12,6 +13,7 @@ enum ImobileAdsState {
   showFailed, // 显示失败
   willDismiss, // 即将消失
   dismissed, // 消失
+  skipped, // 跳过
   earnedReward, // 获得奖励
 }
 
@@ -267,6 +269,76 @@ class ImobileAds {
           }
         },
       ),
+    );
+  }
+
+  /// Unity BannerAd
+  static Widget unityBannerAd({
+    required String placementId,
+    BannerSize size = BannerSize.standard,
+    void Function(ImobileAdsState, UnityAdsBannerError?, String?)? callback,
+  }) {
+    return UnityBannerAd(
+      placementId: placementId,
+      size: size,
+      onLoad: (_) {
+        if (callback != null) {
+          callback(ImobileAdsState.loaded, null, null);
+        }
+      },
+      onFailed: (_, error, message) {
+        if (callback != null) {
+          callback(ImobileAdsState.loadFailed, error, message);
+        }
+      },
+    );
+  }
+
+  /// Unity 视频广告
+  static Future<void> unityAd({
+    required String placementId,
+    void Function(ImobileAdsState)? state,
+    void Function(UnityAdsLoadError, String)? loadFailed,
+    void Function(UnityAdsShowError, String)? showFailed,
+  }) async {
+    UnityAds.load(
+      placementId: placementId,
+      onComplete: (_) async {
+        await UnityAds.showVideoAd(
+          placementId: placementId,
+          onStart: (_) {
+            if (state != null) {
+              state(ImobileAdsState.showed);
+            }
+          },
+          onSkipped: (_) {
+            if (state != null) {
+              state(ImobileAdsState.skipped);
+            }
+          },
+          onComplete: (_) {
+            if (state != null) {
+              state(ImobileAdsState.earnedReward);
+            }
+          },
+          onFailed: (_, error, message) {
+            if (state != null) {
+              state(ImobileAdsState.showFailed);
+            }
+            if (showFailed != null) {
+              showFailed(error, message);
+            }
+          },
+        );
+      },
+      onFailed: (placementId, error, message) {
+        if (state != null) {
+          state(ImobileAdsState.loadFailed);
+        }
+        if (loadFailed != null) {
+          loadFailed(error, message);
+        }
+      },
     );
   }
 }
