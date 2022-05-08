@@ -20,7 +20,7 @@ class ImobileAds {
   static bool get isTestMode => _testMode;
 
   /// 初始化
-  static Future<void> initialize({
+  static Future<InitializationStatus> initialize({
     String? unityId,
     bool testMode = false,
     FirebaseTestLabMode firebaseTestLabMode = FirebaseTestLabMode.disableAds,
@@ -28,7 +28,7 @@ class ImobileAds {
     dynamic Function(UnityAdsInitializationError, String)? onFailed,
   }) async {
     _testMode = testMode;
-    await MobileAds.instance.initialize();
+
     if (unityId != null) {
       await UnityAds.init(
         gameId: unityId,
@@ -38,8 +38,9 @@ class ImobileAds {
         onFailed: onFailed,
       );
     }
+    InitializationStatus status = await MobileAds.instance.initialize();
     _initialized = true;
-    return;
+    return status;
   }
 
   /// 更新请求配置
