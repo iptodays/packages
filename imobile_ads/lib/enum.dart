@@ -12,6 +12,5 @@ enum ImobileAdsState {
   showFailed, // 显示失败
   willDismiss, // 即将消失
   dismissed, // 消失
-  skipped, // 跳过
   earnedReward, // 获得奖励
 }

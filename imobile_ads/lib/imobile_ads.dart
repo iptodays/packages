@@ -68,7 +68,8 @@ class ImobileAds {
   static Future<void> appOpenAd({
     required String id,
     int orientation = AppOpenAd.orientationPortrait,
-    void Function(ImobileAdsState, AdError?)? callback,
+    void Function(ImobileAdsState)? callback,
+    void Function(AdError)? failure,
   }) async {
     String unitId = id;
     if (isTestMode) {
@@ -82,32 +83,43 @@ class ImobileAds {
       adLoadCallback: AppOpenAdLoadCallback(
         onAdLoaded: (ad) {
           if (callback != null) {
-            callback(ImobileAdsState.loaded, null);
+            callback(ImobileAdsState.loaded);
           }
           ad.show();
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdShowedFullScreenContent: (ad) {
               if (callback != null) {
-                callback(ImobileAdsState.showed, null);
+                callback(ImobileAdsState.showed);
               }
             },
             onAdFailedToShowFullScreenContent: (ad, error) {
               ad.dispose();
               if (callback != null) {
-                callback(ImobileAdsState.showFailed, error);
+                callback(ImobileAdsState.showFailed);
+              }
+              if (failure != null) {
+                failure(error);
+              }
+            },
+            onAdWillDismissFullScreenContent: (ad) {
+              if (callback != null) {
+                callback(ImobileAdsState.willDismiss);
               }
             },
             onAdDismissedFullScreenContent: (ad) {
               ad.dispose();
               if (callback != null) {
-                callback(ImobileAdsState.loadFailed, null);
+                callback(ImobileAdsState.dismissed);
               }
             },
           );
         },
         onAdFailedToLoad: (LoadAdError error) {
           if (callback != null) {
-            callback(ImobileAdsState.loadFailed, error);
+            callback(ImobileAdsState.loadFailed);
+          }
+          if (failure != null) {
+            failure(error);
           }
         },
       ),
@@ -119,7 +131,8 @@ class ImobileAds {
   static Widget bannerAd({
     required String id,
     AdSize size = AdSize.fullBanner,
-    void Function(ImobileAdsState, AdError?)? callback,
+    void Function(ImobileAdsState)? callback,
+    void Function(AdError)? failure,
   }) {
     String unitId = id;
     if (isTestMode) {
@@ -137,7 +150,8 @@ class ImobileAds {
   /// 插页式广告
   static Future<void> interstitialAd({
     required String id,
-    void Function(ImobileAdsState, AdError?)? callback,
+    void Function(ImobileAdsState)? callback,
+    void Function(AdError)? failure,
   }) async {
     String unitId = id;
     if (isTestMode) {
@@ -151,32 +165,43 @@ class ImobileAds {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           if (callback != null) {
-            callback(ImobileAdsState.loaded, null);
+            callback(ImobileAdsState.loaded);
           }
           ad.show();
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdShowedFullScreenContent: (ad) {
               if (callback != null) {
-                callback(ImobileAdsState.showed, null);
+                callback(ImobileAdsState.showed);
               }
             },
             onAdFailedToShowFullScreenContent: (ad, error) {
               ad.dispose();
               if (callback != null) {
-                callback(ImobileAdsState.showFailed, error);
+                callback(ImobileAdsState.showFailed);
+              }
+              if (failure != null) {
+                failure(error);
+              }
+            },
+            onAdWillDismissFullScreenContent: (ad) {
+              if (callback != null) {
+                callback(ImobileAdsState.willDismiss);
               }
             },
             onAdDismissedFullScreenContent: (ad) {
               ad.dispose();
               if (callback != null) {
-                callback(ImobileAdsState.loadFailed, null);
+                callback(ImobileAdsState.dismissed);
               }
             },
           );
         },
         onAdFailedToLoad: (error) {
           if (callback != null) {
-            callback(ImobileAdsState.loadFailed, error);
+            callback(ImobileAdsState.loadFailed);
+          }
+          if (failure != null) {
+            failure(error);
           }
         },
       ),
@@ -186,7 +211,8 @@ class ImobileAds {
   /// 激励广告
   static Future<void> rewardedAd({
     required String id,
-    void Function(ImobileAdsState, AdError?)? callback,
+    void Function(ImobileAdsState)? callback,
+    void Function(AdError)? failure,
   }) async {
     String unitId = id;
     if (isTestMode) {
@@ -200,38 +226,49 @@ class ImobileAds {
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
           if (callback != null) {
-            callback(ImobileAdsState.loaded, null);
+            callback(ImobileAdsState.loaded);
           }
           ad.show(
             onUserEarnedReward: (view, item) {
               if (callback != null) {
-                callback(ImobileAdsState.earnedReward, null);
+                callback(ImobileAdsState.earnedReward);
               }
             },
           );
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdShowedFullScreenContent: (ad) {
               if (callback != null) {
-                callback(ImobileAdsState.showed, null);
+                callback(ImobileAdsState.showed);
               }
             },
             onAdFailedToShowFullScreenContent: (ad, error) {
               ad.dispose();
               if (callback != null) {
-                callback(ImobileAdsState.showFailed, error);
+                callback(ImobileAdsState.showFailed);
+              }
+              if (failure != null) {
+                failure(error);
+              }
+            },
+            onAdWillDismissFullScreenContent: (ad) {
+              if (callback != null) {
+                callback(ImobileAdsState.willDismiss);
               }
             },
             onAdDismissedFullScreenContent: (ad) {
               ad.dispose();
               if (callback != null) {
-                callback(ImobileAdsState.loadFailed, null);
+                callback(ImobileAdsState.dismissed);
               }
             },
           );
         },
         onAdFailedToLoad: (LoadAdError error) {
           if (callback != null) {
-            callback(ImobileAdsState.loadFailed, error);
+            callback(ImobileAdsState.loadFailed);
+          }
+          if (failure != null) {
+            failure(error);
           }
         },
       ),
@@ -279,7 +316,7 @@ class ImobileAds {
           },
           onSkipped: (_) {
             if (state != null) {
-              state(ImobileAdsState.skipped);
+              state(ImobileAdsState.dismissed);
             }
           },
           onComplete: (_) {
