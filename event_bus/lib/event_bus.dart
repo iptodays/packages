@@ -2,8 +2,8 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-24 13:15:47
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-05-24 13:24:49
- * @FilePath: /artyouth/lib/utils/event_bus/event_bus.dart
+ * @LastEditTime: 2022-05-24 17:12:24
+ * @FilePath: /packages/event_bus/lib/event_bus.dart
  *
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
  */
@@ -49,7 +49,7 @@ class EventBus {
   }
 
   /// 发送事件
-  void commit({required String eventKey, Object? arg}) {
+  void commit({required String eventKey, dynamic arg}) {
     List<EventCallback>? callbacks = _events[eventKey];
     if (callbacks != null) {
       for (var element in callbacks) {
