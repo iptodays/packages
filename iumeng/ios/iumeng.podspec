@@ -16,6 +16,7 @@ A new Flutter project.
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   
+  s.public_header_files = 'Classes/**/*.h'
   s.static_framework = true
   s.dependency 'UMCommon', '~> 7.3.7'
   s.dependency 'UMPush', '~> 4.0.2'
