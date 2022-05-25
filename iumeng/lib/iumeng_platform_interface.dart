@@ -14,7 +14,7 @@ abstract class IumengPlatform extends PlatformInterface {
   ///
   /// Defaults to [MethodChannelIumeng].
   static IumengPlatform get instance => _instance;
-
+  
   /// Platform-specific implementations should set this with their own
   /// platform-specific class that extends [IumengPlatform] when
   /// they register themselves.
