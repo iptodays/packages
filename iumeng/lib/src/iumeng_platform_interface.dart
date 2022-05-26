@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'iumeng_method_channel.dart';
@@ -27,7 +28,7 @@ abstract class IumengPlatform extends PlatformInterface {
   late void Function(String)? deviceTokenCallback;
 
   /// 注册推送回调
-  late void Function(bool, int?, String?)? registerRemoteNotificationsCallback;
+  late void Function(bool, FlutterError?)? registerRemoteNotificationsCallback;
 
   /// 初始化sdk
   ///

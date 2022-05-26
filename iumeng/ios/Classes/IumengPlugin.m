@@ -5,6 +5,18 @@
 #import <UMPush/UMessage.h>
 #include<arpa/inet.h>
 
+@interface NSError (FlutterError)
+@property(readonly, nonatomic) FlutterError *flutterError;
+@end
+
+@implementation NSError (FlutterError)
+- (FlutterError *)flutterError {
+    return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %d", (int)self.code]
+                               message:self.domain
+                               details:self.localizedDescription];
+}
+@end
+
 @interface IumengPlugin()<UIApplicationDelegate, UNUserNotificationCenterDelegate>
 
 @end
@@ -18,6 +30,7 @@
       methodChannelWithName:@"iumeng"
             binaryMessenger:[registrar messenger]];
   IumengPlugin* instance = [[IumengPlugin alloc] initWithChannel:channel];
+    [registrar addApplicationDelegate:instance];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
@@ -101,8 +114,7 @@
             @"result":@(result),
         }.mutableCopy;
         if (error != nil) {
-            [arguments setValue:@(error.code) forKey:@"errorCode"];
-            [arguments setValue:error.description forKey:@"errorMessage"];
+            [arguments setValue:[error flutterError] forKey:@"error"];
         }
         [strongSelf->_channel invokeMethod:@"registerRemoteNotifications" arguments:arguments];
     }];

@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-05-26 21:36:08
+ * @LastEditTime: 2022-05-26 21:58:13
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -28,8 +28,7 @@ class MethodChannelIumeng extends IumengPlatform {
         if (registerRemoteNotificationsCallback != null) {
           registerRemoteNotificationsCallback!(
             call.arguments['result'],
-            call.arguments['errorCode'],
-            call.arguments['errorMessage'],
+            call.arguments['error'],
           );
         }
         break;
