@@ -23,6 +23,12 @@ abstract class IumengPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// 获取到deviceToken的回调
+  late void Function(String)? deviceTokenCallback;
+
+  /// 注册推送回调
+  late void Function(bool, int?, String?)? registerRemoteNotificationsCallback;
+
   /// 初始化sdk
   ///
   /// * [appKey]

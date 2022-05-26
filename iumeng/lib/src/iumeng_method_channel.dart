@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-05-26 21:33:10
+ * @LastEditTime: 2022-05-26 21:36:08
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -20,12 +20,6 @@ class MethodChannelIumeng extends IumengPlatform {
   @visibleForTesting
   late final MethodChannel methodChannel = const MethodChannel('iumeng')
     ..setMethodCallHandler(_setMethodCallHandler);
-
-  /// 获取到deviceToken的回调
-  late void Function(String)? deviceTokenCallback;
-
-  /// 注册推送回调
-  late void Function(bool, int?, String?)? registerRemoteNotificationsCallback;
 
   /// 由原生调用flutter的处理
   Future<dynamic> _setMethodCallHandler(MethodCall call) async {
