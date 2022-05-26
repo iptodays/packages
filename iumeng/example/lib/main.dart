@@ -1,5 +1,16 @@
+/*
+ * @Author: iptoday wangdong1221@outlook.com
+ * @Date: 2022-05-25 20:54:10
+ * @LastEditors: iptoday wangdong1221@outlook.com
+ * @LastEditTime: 2022-05-26 21:37:42
+ * @FilePath: /iumeng/example/lib/main.dart
+ * 
+ * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
+ */
 import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:iumeng/iumeng.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +27,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    Iumeng.instance.deviceTokenCallback = (a) {};
     initPlatformState();
   }
 

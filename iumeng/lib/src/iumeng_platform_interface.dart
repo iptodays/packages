@@ -55,7 +55,7 @@ abstract class IumengPlatform extends PlatformInterface {
     throw UnimplementedError('requestPermission() has not been implemented.');
   }
 
-  /// 是否允许sdk自动清空角标
+  /// 允许sdk自动清空角标
   Future<void> badgeClear() {
     throw UnimplementedError('badgeClear() has not been implemented.');
   }
