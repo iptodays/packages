@@ -215,7 +215,6 @@
 
 #pragma mark - AppDelegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSLog(@"获取launchOptions");
     _completeLaunchNotification = launchOptions;
     return YES;
 }
@@ -232,7 +231,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
     //1.2.7版本开始不需要用户再手动注册devicetoken，SDK会自动注册
     //传入的devicetoken是系统回调didRegisterForRemoteNotificationsWithDeviceToken的入参，切记
     //[UMessage registerDeviceToken:deviceToken];
-    NSLog(@"获取%@", hexToken);
     [_channel invokeMethod:@"deviceToken" arguments:@{@"deviceToken":hexToken}];
 }
 
