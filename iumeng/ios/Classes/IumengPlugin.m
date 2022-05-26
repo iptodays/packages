@@ -3,6 +3,7 @@
 #import <UMCommon/UMCommon.h>
 #import <UMCommon/MobClick.h>
 #import <UMPush/UMessage.h>
+#include<arpa/inet.h>
 
 @interface IumengPlugin()<UIApplicationDelegate, UNUserNotificationCenterDelegate>
 
@@ -10,13 +11,22 @@
 
 @implementation IumengPlugin {
     NSDictionary *_completeLaunchNotification;
+    FlutterMethodChannel *_channel;
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
       methodChannelWithName:@"iumeng"
             binaryMessenger:[registrar messenger]];
-  IumengPlugin* instance = [[IumengPlugin alloc] init];
+  IumengPlugin* instance = [[IumengPlugin alloc] initWithChannel:channel];
   [registrar addMethodCallDelegate:instance channel:channel];
+}
+
+- (instancetype)initWithChannel:(FlutterMethodChannel *)channel {
+    self = [super init];
+    if (self) {
+        _channel = channel;
+    }
+    return self;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -82,10 +92,19 @@
         entity.types = UMessageAuthorizationOptionSound;
     }
     [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+    __weak typeof(self) weakSelf = self;
     [UMessage registerForRemoteNotificationsWithLaunchOptions:_completeLaunchNotification
                                                        Entity:entity
-                                            completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        
+                                            completionHandler:^(BOOL result, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        NSMutableDictionary *arguments = @{
+            @"result":@(result),
+        }.mutableCopy;
+        if (error != nil) {
+            [arguments setValue:@(error.code) forKey:@"errorCode"];
+            [arguments setValue:error.description forKey:@"errorMessage"];
+        }
+        [strongSelf->_channel invokeMethod:@"registerRemoteNotifications" arguments:arguments];
     }];
     result(nil);
 }
@@ -188,9 +207,24 @@
     return YES;
 }
 
-/// iOS10以下使用这两个方法接收通知
 - (void)application:(UIApplication*)application
-    didReceiveRemoteNotification:(NSDictionary*)userInfo
+didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+     if(![deviceToken isKindOfClass:[NSData class]])return;
+    const unsigned *tokenBytes =(const unsigned*)[deviceToken bytes];
+    NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
+                          ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+                          ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+                          ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    //1.2.7版本开始不需要用户再手动注册devicetoken，SDK会自动注册
+    //传入的devicetoken是系统回调didRegisterForRemoteNotificationsWithDeviceToken的入参，切记
+    //[UMessage registerDeviceToken:deviceToken];
+    [_channel invokeMethod:@"deviceToken" arguments:@{@"deviceToken":hexToken}];
+}
+
+/// iOS10以下使用这两个方法接收通知
+- (void)application:(UIApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo
     fetchCompletionHandler:(void(^)(UIBackgroundFetchResult))completionHandler {
     [UMessage setAutoAlert:NO];
     // 过滤掉Push的撤销功能，
@@ -220,8 +254,8 @@
 }
 
 /// iOS10新增：处理后台点击通知的代理方法
-- (void)userNotificationCenter:(UNUserNotificationCenter*)center didReceiveNotificationResponse:(UNNotificationResponse*)response withCompletionHandler:(void(^)(void))completionHandler {
-    NSDictionary* userInfo = response.notification.request.content.userInfo;
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler {
+    NSDictionary *userInfo = response.notification.request.content.userInfo;
     if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]){
     // 应用处于后台时的远程推送接受
     // 必须加这句代码

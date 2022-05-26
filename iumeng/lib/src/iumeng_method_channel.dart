@@ -2,11 +2,13 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-05-26 16:12:40
+ * @LastEditTime: 2022-05-26 21:33:10
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
  */
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -16,7 +18,35 @@ import 'iumeng_platform_interface.dart';
 class MethodChannelIumeng extends IumengPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('iumeng');
+  late final MethodChannel methodChannel = const MethodChannel('iumeng')
+    ..setMethodCallHandler(_setMethodCallHandler);
+
+  /// 获取到deviceToken的回调
+  late void Function(String)? deviceTokenCallback;
+
+  /// 注册推送回调
+  late void Function(bool, int?, String?)? registerRemoteNotificationsCallback;
+
+  /// 由原生调用flutter的处理
+  Future<dynamic> _setMethodCallHandler(MethodCall call) async {
+    switch (call.method) {
+      case 'registerRemoteNotifications':
+        if (registerRemoteNotificationsCallback != null) {
+          registerRemoteNotificationsCallback!(
+            call.arguments['result'],
+            call.arguments['errorCode'],
+            call.arguments['errorMessage'],
+          );
+        }
+        break;
+      case 'deviceToken':
+        if (deviceTokenCallback != null) {
+          deviceTokenCallback!(call.arguments['deviceToken']);
+        }
+        break;
+      default:
+    }
+  }
 
   @override
   Future<void> initialize({
@@ -36,11 +66,11 @@ class MethodChannelIumeng extends IumengPlatform {
 
   @override
   Future<void> requestPermission({
-    required bool alert,
-    required bool badge,
-    required bool sound,
+    bool alert = true,
+    bool badge = true,
+    bool sound = true,
   }) async {
-    return methodChannel.invokeMethod(
+    await methodChannel.invokeMethod(
       'requestPermission',
       {
         'alert': alert,
