@@ -7,8 +7,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CustomScaffold extends StatelessWidget {
-  const CustomScaffold({
+class IScaffold extends StatelessWidget {
+  const IScaffold({
     Key? key,
     required this.body,
     this.appBar,

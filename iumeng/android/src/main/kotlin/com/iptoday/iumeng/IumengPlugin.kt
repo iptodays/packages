@@ -1,12 +1,16 @@
 package com.iptoday.iumeng
 
+import android.content.Context
 import androidx.annotation.NonNull
-
+import com.umeng.commonsdk.UMConfigure
+import com.umeng.message.PushAgent
+import com.umeng.message.api.UPushRegisterCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+
 
 /** IumengPlugin */
 class IumengPlugin: FlutterPlugin, MethodCallHandler {
@@ -15,16 +19,25 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private lateinit var channel : MethodChannel
+  private lateinit var context: Context
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "iumeng")
     channel.setMethodCallHandler(this)
+    context = flutterPluginBinding.applicationContext
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
-      "" -> {
-
+      "initialize" -> {
+        val map = call.arguments as HashMap<*, *>
+        if (map["logEnabled"] == true) {
+          UMConfigure.setLogEnabled(true)
+        }
+        val pushAgent = PushAgent.getInstance(context)
+//        pushAgent.register(UPushRegisterCallback() {
+//          sequence<> {  },
+//        })
       }
       else -> {
         result.notImplemented()

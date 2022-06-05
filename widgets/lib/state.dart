@@ -5,9 +5,9 @@
  * @Last Modified time: 2022-04-29 22:42:40
  */
 import 'package:flutter/material.dart';
-export 'package:widgets/scaffold.dart';
+export 'package:iwidgets/scaffold.dart';
 
-abstract class CustomState<T extends StatefulWidget> extends State<T>
+abstract class IState<T extends StatefulWidget> extends State<T>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   /// 初始化时是否执行loadData
   bool get executeLoadData => true;

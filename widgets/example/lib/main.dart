@@ -1,4 +1,14 @@
+/*
+ * @Author: iptoday wangdong1221@outlook.com
+ * @Date: 2022-04-29 22:24:56
+ * @LastEditors: iptoday wangdong1221@outlook.com
+ * @LastEditTime: 2022-06-05 23:15:24
+ * @FilePath: /widgets/example/lib/main.dart
+ * 
+ * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
+ */
 import 'package:flutter/material.dart';
+import 'package:widgets/scaffold.dart';
 import 'package:widgets/state.dart';
 
 void main() {
@@ -38,13 +48,13 @@ class Demo extends StatefulWidget {
   State<StatefulWidget> createState() => DemoState();
 }
 
-class DemoState extends CustomState<Demo> {
+class DemoState extends IState<Demo> {
   @override
   bool get executeLoadData => true;
 
   @override
   Widget customBuild(BuildContext context) {
-    return CustomScaffold(
+    return IScaffold(
       body: Container(
         alignment: Alignment.center,
         child: const Text(''),

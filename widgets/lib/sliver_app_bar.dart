@@ -4,12 +4,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
-class CustomSliverAppBar extends StatefulWidget {
+class ISliverAppBar extends StatefulWidget {
   /// Creates a material design app bar that can be placed in a [CustomScrollView].
   ///
   /// The arguments [forceElevated], [primary], [floating], [pinned], [snap]
   /// and [automaticallyImplyLeading] must not be null.
-  const CustomSliverAppBar({
+  const ISliverAppBar({
     Key? key,
     this.leading,
     this.automaticallyImplyLeading = true,
@@ -333,12 +333,12 @@ class CustomSliverAppBar extends StatefulWidget {
   final SystemUiOverlayStyle? systemOverlayStyle;
 
   @override
-  State<CustomSliverAppBar> createState() => _CustomSliverAppBarState();
+  State<ISliverAppBar> createState() => _CustomSliverAppBarState();
 }
 
 // This class is only Stateful because it owns the TickerProvider used
 // by the floating appbar snap animation (via FloatingHeaderSnapConfiguration).
-class _CustomSliverAppBarState extends State<CustomSliverAppBar>
+class _CustomSliverAppBarState extends State<ISliverAppBar>
     with TickerProviderStateMixin {
   FloatingHeaderSnapConfiguration? _snapConfiguration;
   OverScrollHeaderStretchConfiguration? _stretchConfiguration;
@@ -379,7 +379,7 @@ class _CustomSliverAppBarState extends State<CustomSliverAppBar>
   }
 
   @override
-  void didUpdateWidget(CustomSliverAppBar oldWidget) {
+  void didUpdateWidget(ISliverAppBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.snap != oldWidget.snap ||
         widget.floating != oldWidget.floating) {
