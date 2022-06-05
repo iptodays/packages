@@ -22,12 +22,12 @@ abstract class IState<T extends StatefulWidget> extends State<T>
   }
 
   @protected
-  Widget customBuild(BuildContext context);
+  Widget ibuild(BuildContext context);
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return customBuild(context);
+    return ibuild(context);
   }
 
   @override

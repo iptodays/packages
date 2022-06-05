@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-04-29 22:24:56
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-06-05 23:15:24
+ * @LastEditTime: 2022-06-05 23:19:46
  * @FilePath: /widgets/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -53,7 +53,7 @@ class DemoState extends IState<Demo> {
   bool get executeLoadData => true;
 
   @override
-  Widget customBuild(BuildContext context) {
+  Widget ibuild(BuildContext context) {
     return IScaffold(
       body: Container(
         alignment: Alignment.center,
