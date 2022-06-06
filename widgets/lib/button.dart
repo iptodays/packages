@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-06-05 23:30:29
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-06-05 23:30:40
+ * @LastEditTime: 2022-06-06 15:08:12
  * @FilePath: /widgets/lib/button.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -14,12 +14,12 @@ class IButton extends StatelessWidget {
   const IButton({
     Key? key,
     this.onTap,
-    this.feedbackType = FeedbackType.light,
+    this.feedbackType,
     required this.child,
   }) : super(key: key);
 
   /// 震动反馈类型
-  final FeedbackType feedbackType;
+  final FeedbackType? feedbackType;
 
   /// 点击事件
   final Function? onTap;
@@ -32,7 +32,9 @@ class IButton extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (onTap != null) {
-          Vibrate.feedback(feedbackType);
+          if (feedbackType != null) {
+            Vibrate.feedback(feedbackType!);
+          }
           onTap!();
         }
       },

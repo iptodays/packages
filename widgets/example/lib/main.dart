@@ -2,14 +2,13 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-04-29 22:24:56
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-06-05 23:19:46
+ * @LastEditTime: 2022-06-06 15:09:16
  * @FilePath: /widgets/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
  */
 import 'package:flutter/material.dart';
-import 'package:widgets/scaffold.dart';
-import 'package:widgets/state.dart';
+import 'package:iwidgets/state.dart';
 
 void main() {
   runApp(const MyApp());
