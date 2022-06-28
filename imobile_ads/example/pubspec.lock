@@ -80,7 +80,7 @@ packages:
       name: google_mobile_ads
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.3.0"
   imobile_ads:
     dependency: "direct main"
     description:

@@ -316,12 +316,13 @@ class ImobileAds {
           },
           onSkipped: (_) {
             if (state != null) {
-              state(ImobileAdsState.dismissed);
+              state(ImobileAdsState.skipped);
             }
           },
           onComplete: (_) {
             if (state != null) {
               state(ImobileAdsState.earnedReward);
+              state(ImobileAdsState.dismissed);
             }
           },
           onFailed: (_, error, message) {

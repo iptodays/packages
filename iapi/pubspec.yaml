@@ -1,7 +1,7 @@
 name: iapi
 description: http
 version: 0.0.1
-homepage: 
+homepage: https://github.com/iptodays/packages/iapi
 
 environment:
   sdk: ">=2.17.1 <3.0.0"
