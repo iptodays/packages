@@ -322,7 +322,6 @@ class ImobileAds {
           onComplete: (_) {
             if (state != null) {
               state(ImobileAdsState.earnedReward);
-              state(ImobileAdsState.dismissed);
             }
           },
           onFailed: (_, error, message) {
