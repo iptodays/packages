@@ -2,12 +2,13 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-05-26 21:58:13
+ * @LastEditTime: 2022-07-01 15:11:46
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
  */
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -45,16 +46,22 @@ class MethodChannelIumeng extends IumengPlatform {
   Future<void> initialize({
     required String appKey,
     required String channel,
+    String? messageSecret,
     required bool logEnabled,
   }) async {
-    return methodChannel.invokeMethod(
-      'initialize',
-      {
-        'appKey': appKey,
-        'channel': channel,
-        'logEnabled': logEnabled,
-      },
+    assert(
+      Platform.isAndroid && messageSecret == null,
+      'messageSecret not found',
     );
+    Map args = {
+      'appKey': appKey,
+      'channel': channel,
+      'logEnabled': logEnabled,
+    };
+    if (Platform.isAndroid) {
+      args['messageSecret'] = messageSecret;
+    }
+    return methodChannel.invokeMethod('initialize', args);
   }
 
   @override
@@ -63,6 +70,7 @@ class MethodChannelIumeng extends IumengPlatform {
     bool badge = true,
     bool sound = true,
   }) async {
+    if (Platform.isAndroid) return;
     await methodChannel.invokeMethod(
       'requestPermission',
       {

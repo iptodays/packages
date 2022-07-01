@@ -3,6 +3,7 @@ package com.iptoday.iumeng
 import android.content.Context
 import androidx.annotation.NonNull
 import com.umeng.commonsdk.UMConfigure
+import com.umeng.commonsdk.utils.UMUtils
 import com.umeng.message.PushAgent
 import com.umeng.message.api.UPushRegisterCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -18,39 +19,65 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
-  private lateinit var channel : MethodChannel
+  private lateinit var methodCall: MethodChannel
   private lateinit var context: Context
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "iumeng")
-    channel.setMethodCallHandler(this)
+    methodCall = MethodChannel(flutterPluginBinding.binaryMessenger, "iumeng")
+    methodCall.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
-      "initialize" -> {
-        val map = call.arguments as HashMap<*, *>
-        if (map["logEnabled"] == true) {
-          UMConfigure.setLogEnabled(true)
-        }
-        val pushAgent = PushAgent.getInstance(context)
-//        pushAgent.register(UPushRegisterCallback() {
-//          sequence<> {  },
-//        })
-      }
+      "initialize" -> initialize(call.arguments as HashMap<*, *>, result)
+      "badgeClear"-> badgeClear(result)
       else -> {
         result.notImplemented()
       }
     }
-    if (call.method == "getPlatformVersion") {
-      result.success("Android ${android.os.Build.VERSION.RELEASE}")
-    } else {
+  }
 
-    }
+  /// 初始化
+   private fun initialize(arguments: HashMap<*, *>, result: Result) {
+     if (arguments["logEnabled"] == true) {
+       UMConfigure.setLogEnabled(true)
+     }
+     val appKey = arguments["appKey"] as String
+     val channel = arguments["channel"] as String
+     val messageSecret = arguments["messageSecret"] as String
+     UMConfigure.preInit(context, appKey, channel)
+     val isMainProcess = UMUtils.isMainProgress(context)
+     if (isMainProcess) {
+       Thread(object :Runnable {
+         override fun run() {
+            UMConfigure.init(context, appKey, channel, UMConfigure.DEVICE_TYPE_PHONE, messageSecret)
+           PushAgent.getInstance(context).register(object :UPushRegisterCallback {
+             override fun onSuccess(p0: String?) {
+               if (p0 != null) {
+                 methodCall.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
+                 methodCall.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
+               }
+             }
+             override fun onFailure(p0: String?, p1: String?) {
+               if(p0 != null) {
+                 methodCall.invokeMethod("registerRemoteNotifications",
+                         mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
+               }
+             }
+           })
+         }
+       })
+     }
+    result.success(null)
+   }
+
+  private fun badgeClear(result: Result) {
+    PushAgent.getInstance(context).displayNotificationNumber = 0
+    result.success(null)
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
+    methodCall.setMethodCallHandler(null)
   }
 }

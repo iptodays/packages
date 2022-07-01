@@ -34,10 +34,12 @@ abstract class IumengPlatform extends PlatformInterface {
   ///
   /// * [appKey]
   /// * [channel]
+  /// * [messageSecret] only android
   /// * [logEnabled] 设置是否在console输出SDK的log信息.
   Future<void> initialize({
     required String appKey,
     required String channel,
+    String? messageSecret,
     required bool logEnabled,
   }) {
     throw UnimplementedError('initialize() has not been implemented.');
