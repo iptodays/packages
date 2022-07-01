@@ -1,6 +1,8 @@
 package com.iptoday.iumeng
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.NonNull
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.commonsdk.utils.UMUtils
@@ -52,17 +54,19 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
            PushAgent.getInstance(context).register(object : UPushRegisterCallback {
                override fun onSuccess(p0: String?) {
                    if (p0 != null) {
-                       println("deviceToken=$p0")
-                       methodCall.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
-                       methodCall.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
+                       Handler(Looper.getMainLooper()).post {
+                           methodCall.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
+                           methodCall.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
+                       }
                    }
                }
 
                override fun onFailure(p0: String?, p1: String?) {
                    if (p0 != null) {
-                       println("errorCode=$p0   message=$p1")
-                       methodCall.invokeMethod("registerRemoteNotifications",
-                               mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
+                       Handler(Looper.getMainLooper()).post {
+                           methodCall.invokeMethod("registerRemoteNotifications",
+                                   mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
+                       }
                    }
                }
            })
