@@ -50,27 +50,26 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
      UMConfigure.preInit(context, appKey, channel)
      val isMainProcess = UMUtils.isMainProgress(context)
      if (isMainProcess) {
-       Thread(object :Runnable {
-         override fun run() {
-            UMConfigure.init(context, appKey, channel, UMConfigure.DEVICE_TYPE_PHONE, messageSecret)
-           PushAgent.getInstance(context).register(object :UPushRegisterCallback {
-             override fun onSuccess(p0: String?) {
-               println("deviceToken=$p0")
-               if (p0 != null) {
-                 methodCall.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
-                 methodCall.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
+       Thread {
+           UMConfigure.init(context, appKey, channel, UMConfigure.DEVICE_TYPE_PHONE, messageSecret)
+           PushAgent.getInstance(context).register(object : UPushRegisterCallback {
+               override fun onSuccess(p0: String?) {
+                   println("deviceToken=$p0")
+                   if (p0 != null) {
+                       methodCall.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
+                       methodCall.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
+                   }
                }
-             }
-             override fun onFailure(p0: String?, p1: String?) {
-               println("errorCode=$p0   message=$p1")
-               if(p0 != null) {
-                 methodCall.invokeMethod("registerRemoteNotifications",
-                         mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
+
+               override fun onFailure(p0: String?, p1: String?) {
+                   println("errorCode=$p0   message=$p1")
+                   if (p0 != null) {
+                       methodCall.invokeMethod("registerRemoteNotifications",
+                               mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
+                   }
                }
-             }
            })
-         }
-       })
+       }.run()
      }
     result.success(null)
    }
