@@ -1,7 +1,7 @@
 name: iumeng
 description: umeng
-version: 0.0.1
-homepage: https://github.com/iptodays/packages/tree/master/iumeng
+version: 0.0.2+1
+homepage: https://github.com/iptodays/packages/iumeng
 
 environment:
   sdk: ">=2.17.1 <3.0.0"

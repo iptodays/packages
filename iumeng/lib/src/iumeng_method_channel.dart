@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-07-01 15:11:46
+ * @LastEditTime: 2022-07-01 15:42:15
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -49,19 +49,12 @@ class MethodChannelIumeng extends IumengPlatform {
     String? messageSecret,
     required bool logEnabled,
   }) async {
-    assert(
-      Platform.isAndroid && messageSecret == null,
-      'messageSecret not found',
-    );
-    Map args = {
+    return methodChannel.invokeMethod('initialize', {
       'appKey': appKey,
       'channel': channel,
       'logEnabled': logEnabled,
-    };
-    if (Platform.isAndroid) {
-      args['messageSecret'] = messageSecret;
-    }
-    return methodChannel.invokeMethod('initialize', args);
+      'messageSecret': messageSecret,
+    });
   }
 
   @override
