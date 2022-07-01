@@ -29,17 +29,18 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    when (call.method) {
-      "initialize" -> initialize(call.arguments as HashMap<*, *>, result)
-      "badgeClear"-> badgeClear(result)
-      else -> {
-        result.notImplemented()
-      }
+    if (call.method == "initialize") {
+      initialize(call.arguments as HashMap<*, *>, result)
+    } else if (call.method == "badgeClear") {
+      badgeClear(result)
+    } else {
+      result.notImplemented()
     }
   }
 
   /// 初始化
    private fun initialize(arguments: HashMap<*, *>, result: Result) {
+    println("调用初始化函数")
      if (arguments["logEnabled"] == true) {
        UMConfigure.setLogEnabled(true)
      }
@@ -54,12 +55,14 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
             UMConfigure.init(context, appKey, channel, UMConfigure.DEVICE_TYPE_PHONE, messageSecret)
            PushAgent.getInstance(context).register(object :UPushRegisterCallback {
              override fun onSuccess(p0: String?) {
+               println("deviceToken=$p0")
                if (p0 != null) {
                  methodCall.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
                  methodCall.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
                }
              }
              override fun onFailure(p0: String?, p1: String?) {
+               println("errorCode=$p0   message=$p1")
                if(p0 != null) {
                  methodCall.invokeMethod("registerRemoteNotifications",
                          mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
