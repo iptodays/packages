@@ -38,6 +38,14 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
       }
   }
 
+    companion object {
+        /// 预初始化
+        fun preInit(@NonNull context: Context, @NonNull appKey: String, @NonNull channel: String) {
+            UMConfigure.preInit(context, appKey, channel)
+        }
+    }
+
+
   /// 初始化
    private fun initialize(arguments: HashMap<*, *>, result: Result) {
      if (arguments["logEnabled"] == true) {
@@ -46,7 +54,7 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
      val appKey = arguments["appKey"] as String
      val channel = arguments["channel"] as String
      val messageSecret = arguments["messageSecret"] as String
-     UMConfigure.preInit(context, appKey, channel)
+     preInit(context, appKey, channel)
      val isMainProcess = UMUtils.isMainProgress(context)
      if (isMainProcess) {
        Thread {
