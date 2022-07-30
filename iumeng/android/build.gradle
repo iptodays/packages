@@ -2,7 +2,7 @@ group 'com.iptoday.iumeng'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.0'
+    ext.kotlin_version = '1.7.10'
     repositories {
         google()
         mavenCentral()
@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //友盟基础库依赖（必须）
     implementation 'com.umeng.umsdk:common:9.4.9'
@@ -57,4 +58,6 @@ dependencies {
     //友盟Push依赖
     implementation 'com.umeng.umsdk:push:6.5.1'
     implementation 'com.umeng.umsdk:union:1.4.0'
+    //友盟统计SDK
+    implementation  'com.umeng.umsdk:asms:1.6.3' // 必选
 }

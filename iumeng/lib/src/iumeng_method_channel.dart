@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-07-01 15:42:15
+ * @LastEditTime: 2022-07-30 16:01:52
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -47,6 +47,7 @@ class MethodChannelIumeng extends IumengPlatform {
     required String appKey,
     required String channel,
     String? messageSecret,
+    bool auto = true,
     required bool logEnabled,
   }) async {
     return methodChannel.invokeMethod('initialize', {
@@ -54,6 +55,7 @@ class MethodChannelIumeng extends IumengPlatform {
       'channel': channel,
       'logEnabled': logEnabled,
       'messageSecret': messageSecret,
+      'auto': auto,
     });
   }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.NonNull
+import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.commonsdk.utils.UMUtils
 import com.umeng.message.PushAgent
@@ -17,10 +18,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 /** IumengPlugin */
 class IumengPlugin: FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
+
   private lateinit var methodCall: MethodChannel
   private lateinit var context: Context
 
@@ -33,6 +31,11 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
       when (call.method) {
           "initialize"->initialize(call.arguments as HashMap<*, *>, result)
+          "setProfile"->setProfile(call.arguments as HashMap<*, *>, result)
+          "profileSignOff"-> profileSignOff(result)
+          "beginLogPageView"-> beginLogPageView(call.arguments as HashMap<*, *>, result)
+          "endLogPageView"-> endLogPageView(call.arguments as HashMap<*, *>, result)
+          "logEvent"-> logEvent(call.arguments as HashMap<*, *>, result)
           "badgeClear"->badgeClear(result)
           else-> result.notImplemented()
       }
@@ -54,11 +57,17 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
      val appKey = arguments["appKey"] as String
      val channel = arguments["channel"] as String
      val messageSecret = arguments["messageSecret"] as String
+      val auto = arguments["appKey"] as Boolean
      preInit(context, appKey, channel)
      val isMainProcess = UMUtils.isMainProgress(context)
      if (isMainProcess) {
        Thread {
            UMConfigure.init(context, appKey, channel, UMConfigure.DEVICE_TYPE_PHONE, messageSecret)
+           if (auto) {
+               MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+           } else {
+               MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
+           }
            PushAgent.getInstance(context).register(object : UPushRegisterCallback {
                override fun onSuccess(p0: String?) {
                    if (p0 != null) {
@@ -88,7 +97,47 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
     result.success(null)
   }
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    methodCall.setMethodCallHandler(null)
-  }
+    private fun setProfile(arguments: HashMap<*, *>,result: Result) {
+        if (arguments["provider"] != null && arguments["puid"] != null) {
+            MobclickAgent.onProfileSignIn(arguments["provider"] as String, arguments["puid"] as String)
+        } else if (arguments["puid"] != null) {
+            MobclickAgent.onProfileSignIn(arguments["puid"] as String)
+        }
+        result.success(null)
+    }
+
+    private fun profileSignOff(result: Result) {
+        MobclickAgent.onProfileSignOff()
+        result.success(null)
+    }
+
+    private fun beginLogPageView(arguments: HashMap<*, *>,result: Result) {
+        MobclickAgent.onPageStart(arguments["pageName"] as String)
+        result.success(null)
+    }
+
+    private fun endLogPageView(arguments: HashMap<*, *>,result: Result) {
+        MobclickAgent.onPageEnd(arguments["pageName"] as String)
+        result.success(null)
+    }
+
+    private fun logEvent(arguments: HashMap<*, *>,result: Result) {
+        if (arguments["label"] != null) {
+            MobclickAgent.onEvent(context, arguments["eventId"] as String, arguments["label"] as String)
+        } else if ( arguments["attributes"] != null && arguments["millisecond"] != null) {
+            MobclickAgent.onEventValue(context, arguments["eventId"] as String,
+                    arguments["attributes"] as Map<String, String>,
+                    arguments["millisecond"] as Int)
+        } else if (arguments["attributes"] != null) {
+            MobclickAgent.onEventObject(context, arguments["eventId"] as String,
+                    arguments["attributes"] as Map<String, String>)
+        } else {
+            MobclickAgent.onEvent(context, arguments["eventId"] as String)
+        }
+        result.success(null)
+    }
+
+    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+        methodCall.setMethodCallHandler(null)
+    }
 }
