@@ -45,12 +45,16 @@
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     if ([@"initialize" isEqualToString:call.method]) {
         [self initialize:call.arguments result:result];
-      } else if ([@"setProfile" isEqualToString:call.method]) {
+      }  else if ([@"setProfile" isEqualToString:call.method]) {
           [self setProfile:call.arguments result:result];
       } else if ([@"requestPermission" isEqualToString:call.method]) {
           [self requestPermission:call.arguments result:result];
+      } else if ([@"getLaunchAppNotification" isEqualToString:call.method]) {
+          [self getLaunchAppNotification:result];
       } else if ([@"badgeClear" isEqualToString:call.method]) {
-          
+          [self badgeClear];
+      } else if ([@"setAutoAlert" isEqualToString:call.method]) {
+          [self setAutoAlert:call.arguments result:result];
       } else if ([@"profileSignOff" isEqualToString:call.method]){
           [self profileSignOff:result];
       } else if ([@"logPageView" isEqualToString:call.method]) {
@@ -119,6 +123,24 @@
         [strongSelf->_channel invokeMethod:@"registerRemoteNotifications" arguments:arguments];
     }];
     result(nil);
+}
+
+/// 设置是否允许SDK当应用在前台运行收到Push时弹出Alert框（默认开启）
+- (void)setAutoAlert:(NSDictionary *)args result:(FlutterResult)result {
+    [UMessage setAutoAlert:args[@"enabled"]];
+}
+
+/// 点击推送启动应用的时候原生会将该 notification 缓存起来，该方法用于获取缓存 notification
+/// 注意：notification 可能是 remoteNotification 和 localNotification，两种推送字段不一样。
+/// 如果不是通过点击推送启动应用，比如点击应用 icon 直接启动应用，notification 会返回 @{}。
+- (void)getLaunchAppNotification:(FlutterResult)result {
+   id pushNotification = [[NSUserDefaults standardUserDefaults] objectForKey:@"pushNotification"];
+    if (pushNotification != nil) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"pushNotification"];
+        result(pushNotification);
+    } else{
+        result(nil);
+    }
 }
 
 /// 允许sdk自动清空角标
@@ -215,12 +237,16 @@
 
 #pragma mark - AppDelegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"pushNotification"];
     _completeLaunchNotification = launchOptions;
+    NSDictionary* pushNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if(pushNotification != nil && pushNotification.allKeys.count > 0) {
+        [[NSUserDefaults standardUserDefaults] setObject:pushNotification forKey:@"pushNotification"];
+    }
     return YES;
 }
 
-- (void)application:(UIApplication*)application
-didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
      if(![deviceToken isKindOfClass:[NSData class]])return;
     const unsigned *tokenBytes =(const unsigned*)[deviceToken bytes];
@@ -228,9 +254,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
                           ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
                           ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
                           ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
-    //1.2.7版本开始不需要用户再手动注册devicetoken，SDK会自动注册
-    //传入的devicetoken是系统回调didRegisterForRemoteNotificationsWithDeviceToken的入参，切记
-    //[UMessage registerDeviceToken:deviceToken];
     [_channel invokeMethod:@"deviceToken" arguments:@{@"deviceToken":hexToken}];
 }
 
@@ -238,7 +261,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 - (void)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
     fetchCompletionHandler:(void(^)(UIBackgroundFetchResult))completionHandler {
-    [UMessage setAutoAlert:NO];
+//    [UMessage setAutoAlert:NO];
     // 过滤掉Push的撤销功能，
     // 因为PushSDK内部已经调用的completionHandler(UIBackgroundFetchResultNewData)，
     // 防止两次调用completionHandler引起崩溃
@@ -252,11 +275,12 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
       willPresentNotification:(UNNotification *)notification
         withCompletionHandler:(void(^)(UNNotificationPresentationOptions))completionHandler {
     NSDictionary* userInfo = notification.request.content.userInfo;
+    [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
     if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]){
         [UMessage setAutoAlert:NO];
         // 应用处于前台时的远程推送接受
         // 必须加这句代码
-       [UMessage didReceiveRemoteNotification:userInfo];
+        [UMessage didReceiveRemoteNotification:userInfo];
     }else{
         // 应用处于前台时的本地推送接受
     }
@@ -268,6 +292,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 /// iOS10新增：处理后台点击通知的代理方法
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
+    [_channel invokeMethod:@"onOpenNotification" arguments:userInfo];
     if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]){
     // 应用处于后台时的远程推送接受
     // 必须加这句代码

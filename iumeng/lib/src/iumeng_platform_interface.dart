@@ -65,6 +65,17 @@ abstract class IumengPlatform extends PlatformInterface {
     throw UnimplementedError('badgeClear() has not been implemented.');
   }
 
+  /// 设置是否允许SDK当应用在前台运行收到Push时弹出Alert框（默认开启）
+  Future<void> setAutoAlert({required bool enabled}) {
+    throw UnimplementedError('setAutoAlert() has not been implemented.');
+  }
+
+  /// 点击推送启动应用的时候原生会将该 notification 缓存起来，该方法用于获取缓存 notification
+  Future<Map?> getLaunchAppNotification() async {
+    throw UnimplementedError(
+        'getLaunchAppNotification() has not been implemented.');
+  }
+
   /// 在统计用户时以设备为标准，如果需要统计应用自身的账号，可以使用此功能
   ///
   /// * [puid] 用户账号ID.长度小于64字节

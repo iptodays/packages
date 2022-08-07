@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-07-30 16:01:52
+ * @LastEditTime: 2022-08-07 14:30:45
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -15,8 +15,16 @@ import 'package:flutter/services.dart';
 
 import 'iumeng_platform_interface.dart';
 
+typedef EventHandler = Function(Map<String, dynamic> event);
+
+typedef TokenHandler = Function(String?);
+
 /// An implementation of [IumengPlatform] that uses method channels.
 class MethodChannelIumeng extends IumengPlatform {
+  EventHandler? _onReceiveNotification;
+  EventHandler? _onOpenNotification;
+  TokenHandler? _deviceToken;
+
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   late final MethodChannel methodChannel = const MethodChannel('iumeng')
@@ -34,8 +42,18 @@ class MethodChannelIumeng extends IumengPlatform {
         }
         break;
       case 'deviceToken':
-        if (deviceTokenCallback != null) {
-          deviceTokenCallback!(call.arguments['deviceToken']);
+        if (_deviceToken != null) {
+          _deviceToken!(call.arguments['deviceToken']);
+        }
+        break;
+      case 'onReceiveNotification':
+        if (_onReceiveNotification != null) {
+          _onReceiveNotification!(call.arguments);
+        }
+        break;
+      case 'onOpenNotification':
+        if (_onOpenNotification != null) {
+          _onOpenNotification!(call.arguments);
         }
         break;
       default:
@@ -76,9 +94,37 @@ class MethodChannelIumeng extends IumengPlatform {
     );
   }
 
+  /// 操作回调
+  void addEventHandler({
+    TokenHandler? deviceToken,
+    EventHandler? onReceiveNotification,
+    EventHandler? onOpenNotification,
+  }) {
+    _deviceToken = deviceToken;
+    _onOpenNotification = onOpenNotification;
+    _onReceiveNotification = onReceiveNotification;
+  }
+
   @override
   Future<void> badgeClear() async {
     return methodChannel.invokeMethod('badgeClear');
+  }
+
+  @override
+  Future<void> setAutoAlert({required bool enabled}) async {
+    if (Platform.isAndroid) return;
+    return methodChannel.invokeMethod(
+      'setAutoAlert',
+      {'enabled': enabled},
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getLaunchAppNotification() async {
+    if (Platform.isAndroid) return null;
+    return methodChannel.invokeMethod<Map<String, dynamic>?>(
+      'getLaunchAppNotification',
+    );
   }
 
   @override
