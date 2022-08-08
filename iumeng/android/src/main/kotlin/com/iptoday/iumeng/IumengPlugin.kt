@@ -45,6 +45,30 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
         /// 预初始化
         fun preInit(@NonNull context: Context, @NonNull appKey: String, @NonNull channel: String) {
             UMConfigure.preInit(context, appKey, channel)
+
+        }
+
+        /// 注册推送
+        fun pushRegister(context: Context,  methodCall: MethodChannel?) {
+            PushAgent.getInstance(context).register(object : UPushRegisterCallback {
+                override fun onSuccess(p0: String?) {
+                    if (p0 != null) {
+                        Handler(Looper.getMainLooper()).post {
+                            methodCall?.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
+                            methodCall?.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
+                        }
+                    }
+                }
+
+                override fun onFailure(p0: String?, p1: String?) {
+                    if (p0 != null) {
+                        Handler(Looper.getMainLooper()).post {
+                            methodCall?.invokeMethod("registerRemoteNotifications",
+                                    mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
+                        }
+                    }
+                }
+            })
         }
     }
 
@@ -62,30 +86,12 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
      if (isMainProcess) {
        Thread {
            UMConfigure.init(context, appKey, channel, UMConfigure.DEVICE_TYPE_PHONE, messageSecret)
-           if (arguments["appKey"] == true) {
+           if (arguments["auto"] == true) {
                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
            } else {
                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
            }
-           PushAgent.getInstance(context).register(object : UPushRegisterCallback {
-               override fun onSuccess(p0: String?) {
-                   if (p0 != null) {
-                       Handler(Looper.getMainLooper()).post {
-                           methodCall.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
-                           methodCall.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
-                       }
-                   }
-               }
-
-               override fun onFailure(p0: String?, p1: String?) {
-                   if (p0 != null) {
-                       Handler(Looper.getMainLooper()).post {
-                           methodCall.invokeMethod("registerRemoteNotifications",
-                                   mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
-                       }
-                   }
-               }
-           })
+           pushRegister(context, methodCall)
        }.run()
      }
     result.success(null)
