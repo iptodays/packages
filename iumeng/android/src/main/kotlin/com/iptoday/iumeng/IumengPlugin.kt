@@ -57,13 +57,12 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
      val appKey = arguments["appKey"] as String
      val channel = arguments["channel"] as String
      val messageSecret = arguments["messageSecret"] as String
-      val auto = arguments["appKey"] as Boolean
      preInit(context, appKey, channel)
      val isMainProcess = UMUtils.isMainProgress(context)
      if (isMainProcess) {
        Thread {
            UMConfigure.init(context, appKey, channel, UMConfigure.DEVICE_TYPE_PHONE, messageSecret)
-           if (auto) {
+           if (arguments["appKey"] == true) {
                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
            } else {
                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);

@@ -3,6 +3,12 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'iumeng_method_channel.dart';
 
+typedef EventHandler = void Function(Map<String, dynamic>);
+
+typedef TokenHandler = void Function(String?);
+
+typedef RegisterHandler = void Function(bool, FlutterError?);
+
 abstract class IumengPlatform extends PlatformInterface {
   /// Constructs a IumengPlatform.
   IumengPlatform() : super(token: _token);
@@ -23,12 +29,6 @@ abstract class IumengPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
-
-  /// 获取到deviceToken的回调
-  late void Function(String)? deviceTokenCallback;
-
-  /// 注册推送回调
-  late void Function(bool, FlutterError?)? registerRemoteNotificationsCallback;
 
   /// 初始化sdk
   ///
@@ -58,6 +58,16 @@ abstract class IumengPlatform extends PlatformInterface {
     required bool sound,
   }) {
     throw UnimplementedError('requestPermission() has not been implemented.');
+  }
+
+  /// 操作回调
+  void addEventHandler({
+    RegisterHandler? registerRemoteNotifications,
+    TokenHandler? deviceToken,
+    EventHandler? onReceiveNotification,
+    EventHandler? onOpenNotification,
+  }) {
+    throw UnimplementedError('addEventHandler() has not been implemented.');
   }
 
   /// 允许sdk自动清空角标

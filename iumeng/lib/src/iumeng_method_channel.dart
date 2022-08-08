@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-08-07 14:30:45
+ * @LastEditTime: 2022-08-08 18:24:47
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -15,15 +15,12 @@ import 'package:flutter/services.dart';
 
 import 'iumeng_platform_interface.dart';
 
-typedef EventHandler = Function(Map<String, dynamic> event);
-
-typedef TokenHandler = Function(String?);
-
 /// An implementation of [IumengPlatform] that uses method channels.
 class MethodChannelIumeng extends IumengPlatform {
   EventHandler? _onReceiveNotification;
   EventHandler? _onOpenNotification;
   TokenHandler? _deviceToken;
+  RegisterHandler? _registerRemoteNotifications;
 
   /// The method channel used to interact with the native platform.
   @visibleForTesting
@@ -34,8 +31,8 @@ class MethodChannelIumeng extends IumengPlatform {
   Future<dynamic> _setMethodCallHandler(MethodCall call) async {
     switch (call.method) {
       case 'registerRemoteNotifications':
-        if (registerRemoteNotificationsCallback != null) {
-          registerRemoteNotificationsCallback!(
+        if (_registerRemoteNotifications != null) {
+          _registerRemoteNotifications!(
             call.arguments['result'],
             call.arguments['error'],
           );
@@ -95,11 +92,14 @@ class MethodChannelIumeng extends IumengPlatform {
   }
 
   /// 操作回调
+  @override
   void addEventHandler({
+    RegisterHandler? registerRemoteNotifications,
     TokenHandler? deviceToken,
     EventHandler? onReceiveNotification,
     EventHandler? onOpenNotification,
   }) {
+    _registerRemoteNotifications = registerRemoteNotifications;
     _deviceToken = deviceToken;
     _onOpenNotification = onOpenNotification;
     _onReceiveNotification = onReceiveNotification;

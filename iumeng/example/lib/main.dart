@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-05-26 21:37:42
+ * @LastEditTime: 2022-08-08 18:41:38
  * @FilePath: /iumeng/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -27,7 +27,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Iumeng.instance.deviceTokenCallback = (a) {};
+    Iumeng.instance.initialize(
+      appKey: 'appKey',
+      channel: 'channel',
+      messageSecret: 'xxxx',
+      logEnabled: true,
+      auto: true,
+    );
+    Iumeng.instance.addEventHandler(
+      deviceToken: (v) {},
+    );
     initPlatformState();
   }
 
