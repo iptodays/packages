@@ -30,6 +30,7 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
       when (call.method) {
+          "preInit"->preInit(call.arguments as HashMap<*, *>, result)
           "initialize"->initialize(call.arguments as HashMap<*, *>, result)
           "setProfile"->setProfile(call.arguments as HashMap<*, *>, result)
           "profileSignOff"-> profileSignOff(result)
@@ -41,62 +42,64 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
       }
   }
 
-    companion object {
-        /// 预初始化
-        fun preInit(@NonNull context: Context, @NonNull appKey: String, @NonNull channel: String) {
-            UMConfigure.preInit(context, appKey, channel)
-
-        }
-
-        /// 注册推送
-        fun pushRegister(context: Context,  methodCall: MethodChannel?) {
-            PushAgent.getInstance(context).register(object : UPushRegisterCallback {
-                override fun onSuccess(p0: String?) {
-                    if (p0 != null) {
-                        Handler(Looper.getMainLooper()).post {
-                            methodCall?.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
-                            methodCall?.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
-                        }
-                    }
-                }
-
-                override fun onFailure(p0: String?, p1: String?) {
-                    if (p0 != null) {
-                        Handler(Looper.getMainLooper()).post {
-                            methodCall?.invokeMethod("registerRemoteNotifications",
-                                    mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
-                        }
-                    }
-                }
-            })
-        }
+    /// 预初始化
+    private fun preInit(arguments: HashMap<*, *>, result: Result) {
+        UMConfigure.preInit(context, arguments["appKey"] as String, arguments["channel"] as String)
+        result.success(null)
     }
 
 
   /// 初始化
    private fun initialize(arguments: HashMap<*, *>, result: Result) {
+      UMConfigure.submitPolicyGrantResult(context, true)
      if (arguments["logEnabled"] == true) {
        UMConfigure.setLogEnabled(true)
      }
      val appKey = arguments["appKey"] as String
      val channel = arguments["channel"] as String
      val messageSecret = arguments["messageSecret"] as String
-     preInit(context, appKey, channel)
-     val isMainProcess = UMUtils.isMainProgress(context)
+     preInit(arguments, result)
+      val isMainProcess = UMUtils.isMainProgress(context)
      if (isMainProcess) {
        Thread {
            UMConfigure.init(context, appKey, channel, UMConfigure.DEVICE_TYPE_PHONE, messageSecret)
-           if (arguments["auto"] == true) {
+           if (arguments["appKey"] == true) {
                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
            } else {
                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
            }
-           pushRegister(context, methodCall)
+           pushRegister()
        }.run()
      }
+      pushRegister()
+      PushAgent.getInstance(context).onAppStart()
     result.success(null)
    }
 
+    /// 注册推送
+    private fun pushRegister() {
+        PushAgent.getInstance(context).register(object : UPushRegisterCallback {
+            override fun onSuccess(p0: String?) {
+                if (p0 != null) {
+                    Handler(Looper.getMainLooper()).post {
+                        methodCall.invokeMethod("registerRemoteNotifications", mapOf("result" to true))
+                        methodCall.invokeMethod("deviceToken", mapOf("deviceToken" to p0))
+                    }
+                }
+            }
+
+            override fun onFailure(p0: String?, p1: String?) {
+                if (p0 != null) {
+                    Handler(Looper.getMainLooper()).post {
+                        methodCall.invokeMethod("registerRemoteNotifications",
+                                mapOf("result" to false, "error" to mapOf("code" to p0, "message" to p1)))
+                    }
+                }
+            }
+        })
+    }
+
+    /// 清除角标
   private fun badgeClear(result: Result) {
     PushAgent.getInstance(context).displayNotificationNumber = 0
     result.success(null)

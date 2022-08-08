@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-08-08 18:24:47
+ * @LastEditTime: 2022-08-08 22:09:13
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -58,6 +58,18 @@ class MethodChannelIumeng extends IumengPlatform {
   }
 
   @override
+  Future<void> preInit({
+    required String appKey,
+    required String channel,
+  }) async {
+    if (Platform.isIOS) return;
+    return methodChannel.invokeMethod('preInit', {
+      'appKey': appKey,
+      'channel': channel,
+    });
+  }
+
+  @override
   Future<void> initialize({
     required String appKey,
     required String channel,
@@ -81,7 +93,7 @@ class MethodChannelIumeng extends IumengPlatform {
     bool sound = true,
   }) async {
     if (Platform.isAndroid) return;
-    await methodChannel.invokeMethod(
+    return methodChannel.invokeMethod(
       'requestPermission',
       {
         'alert': alert,

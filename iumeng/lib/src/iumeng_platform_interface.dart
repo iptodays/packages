@@ -30,6 +30,18 @@ abstract class IumengPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// 预初始化
+  /// only android
+  ///
+  /// * [appKey]
+  /// * [channel]
+  Future<void> preInit({
+    required String appKey,
+    required String channel,
+  }) async {
+    throw UnimplementedError('preInit() has not been implemented.');
+  }
+
   /// 初始化sdk
   ///
   /// * [appKey]
@@ -56,7 +68,7 @@ abstract class IumengPlatform extends PlatformInterface {
     required bool alert,
     required bool badge,
     required bool sound,
-  }) {
+  }) async {
     throw UnimplementedError('requestPermission() has not been implemented.');
   }
 
@@ -76,7 +88,7 @@ abstract class IumengPlatform extends PlatformInterface {
   }
 
   /// 设置是否允许SDK当应用在前台运行收到Push时弹出Alert框（默认开启）
-  Future<void> setAutoAlert({required bool enabled}) {
+  Future<void> setAutoAlert({required bool enabled}) async {
     throw UnimplementedError('setAutoAlert() has not been implemented.');
   }
 
