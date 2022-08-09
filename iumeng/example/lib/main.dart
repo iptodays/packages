@@ -2,16 +2,12 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-08-09 13:06:24
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-08-09 13:07:10
+ * @LastEditTime: 2022-08-09 13:51:47
  * @FilePath: /iumeng/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
  */
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:iumeng/iumeng.dart';
 
 void main() {
   runApp(const MyApp());
