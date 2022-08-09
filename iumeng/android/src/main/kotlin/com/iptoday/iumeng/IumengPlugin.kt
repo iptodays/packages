@@ -7,8 +7,11 @@ import androidx.annotation.NonNull
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.commonsdk.utils.UMUtils
+import com.umeng.message.MsgConstant
 import com.umeng.message.PushAgent
+import com.umeng.message.api.UPushMessageHandler
 import com.umeng.message.api.UPushRegisterCallback
+import com.umeng.message.entity.UMessage
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -33,6 +36,7 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
           "preInit"->preInit(call.arguments as HashMap<*, *>, result)
           "initialize"->initialize(call.arguments as HashMap<*, *>, result)
           "setProfile"->setProfile(call.arguments as HashMap<*, *>, result)
+          "setAutoAlert"->setAutoAlert(call.arguments as HashMap<*, *>, result)
           "profileSignOff"-> profileSignOff(result)
           "beginLogPageView"-> beginLogPageView(call.arguments as HashMap<*, *>, result)
           "endLogPageView"-> endLogPageView(call.arguments as HashMap<*, *>, result)
@@ -72,6 +76,17 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
        }.run()
      }
       pushRegister()
+      PushAgent.getInstance(context).displayNotificationNumber = 0
+      //服务端控制声音
+      PushAgent.getInstance(context).notificationPlaySound = MsgConstant.NOTIFICATION_PLAY_SERVER
+      //客户端允许呼吸灯点亮
+      PushAgent.getInstance(context).notificationPlayLights = MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE
+      //客户端禁止振动
+      PushAgent.getInstance(context).notificationPlayVibrate = MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE
+      PushAgent.getInstance(context).muteDurationSeconds = 15;
+      PushAgent.getInstance(context).notificationClickHandler = UPushMessageHandler {
+          _, p1 -> methodCall.invokeMethod("onOpenNotification", p1?.extra)
+      }
       PushAgent.getInstance(context).onAppStart()
     result.success(null)
    }
@@ -104,6 +119,10 @@ class IumengPlugin: FlutterPlugin, MethodCallHandler {
     PushAgent.getInstance(context).displayNotificationNumber = 0
     result.success(null)
   }
+
+    private fun setAutoAlert(arguments: HashMap<*, *>,result: Result) {
+        PushAgent.getInstance(context).notificationOnForeground = arguments["enabled"] as Boolean
+    }
 
     private fun setProfile(arguments: HashMap<*, *>,result: Result) {
         if (arguments["provider"] != null && arguments["puid"] != null) {

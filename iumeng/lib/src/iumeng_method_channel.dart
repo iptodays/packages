@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-05-25 20:54:09
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-08-08 22:09:13
+ * @LastEditTime: 2022-08-09 13:37:35
  * @FilePath: /iumeng/lib/src/iumeng_method_channel.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -124,7 +124,6 @@ class MethodChannelIumeng extends IumengPlatform {
 
   @override
   Future<void> setAutoAlert({required bool enabled}) async {
-    if (Platform.isAndroid) return;
     return methodChannel.invokeMethod(
       'setAutoAlert',
       {'enabled': enabled},
