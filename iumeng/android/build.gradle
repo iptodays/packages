@@ -53,11 +53,9 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //友盟基础库依赖（必须）
-    implementation 'com.umeng.umsdk:common:9.4.9'
+    implementation 'com.umeng.umsdk:common:9.5.2'
     implementation 'com.umeng.umsdk:asms:1.6.3'
     //友盟Push依赖
-    implementation 'com.umeng.umsdk:push:6.5.1'
-    implementation 'com.umeng.umsdk:union:1.4.0'
-    //友盟统计SDK
-    implementation  'com.umeng.umsdk:asms:1.6.3' // 必选
+    implementation 'com.umeng.umsdk:push:6.5.4'
+    implementation 'com.umeng.umsdk:union:1.4.1'
 }
