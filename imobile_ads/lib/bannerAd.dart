@@ -29,7 +29,8 @@ class CustomBannerAd extends StatefulWidget {
   State<StatefulWidget> createState() => _CustomBannerAdState();
 }
 
-class _CustomBannerAdState extends State<CustomBannerAd> {
+class _CustomBannerAdState extends State<CustomBannerAd>
+    with AutomaticKeepAliveClientMixin {
   bool loaded = false;
 
   late BannerAd bannerAd;
@@ -80,6 +81,7 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (loaded) {
       return Container(
         height: widget.size.height.toDouble(),
@@ -89,4 +91,7 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
     }
     return Container();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
