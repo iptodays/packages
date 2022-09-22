@@ -14,16 +14,13 @@ class CustomBannerAd extends StatefulWidget {
     required this.id,
     required this.size,
     this.callback,
-    this.failure,
   }) : super(key: key);
 
   final String id;
 
   final AdSize size;
 
-  final void Function(ImobileAdsState)? callback;
-
-  final void Function(AdError)? failure;
+  final void Function(ImobileAdsState, AdError?)? callback;
 
   @override
   State<StatefulWidget> createState() => _CustomBannerAdState();
@@ -43,7 +40,7 @@ class _CustomBannerAdState extends State<CustomBannerAd>
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.loaded);
+            widget.callback!(ImobileAdsState.loaded, null);
           }
           loaded = true;
           setState(() {});
@@ -51,25 +48,22 @@ class _CustomBannerAdState extends State<CustomBannerAd>
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.loadFailed);
-          }
-          if (widget.failure != null) {
-            widget.failure!(error);
+            widget.callback!(ImobileAdsState.loadFailed, error);
           }
         },
         onAdOpened: (ad) {
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.showed);
+            widget.callback!(ImobileAdsState.showed, null);
           }
         },
         onAdClosed: (ad) {
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.dismissed);
+            widget.callback!(ImobileAdsState.dismissed, null);
           }
         },
         onAdWillDismissScreen: (ad) {
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.willDismiss);
+            widget.callback!(ImobileAdsState.willDismiss, null);
           }
         },
       ),
