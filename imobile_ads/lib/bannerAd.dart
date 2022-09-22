@@ -81,7 +81,11 @@ class _CustomBannerAdState extends State<CustomBannerAd> {
   @override
   Widget build(BuildContext context) {
     if (loaded) {
-      return AdWidget(ad: bannerAd);
+      return Container(
+        height: widget.size.height.toDouble(),
+        alignment: Alignment.center,
+        child: AdWidget(ad: bannerAd),
+      );
     }
     return Container();
   }
