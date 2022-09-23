@@ -159,6 +159,7 @@ class ImobileAds {
             onAdShowedFullScreenContent: (ad) {
               if (callback != null) {
                 callback(ImobileAdsState.showed, null);
+                callback(ImobileAdsState.earnedReward, null);
               }
             },
             onAdFailedToShowFullScreenContent: (ad, error) {
