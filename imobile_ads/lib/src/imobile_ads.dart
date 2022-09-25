@@ -128,7 +128,7 @@ class ImobileAds {
           ? 'ca-app-pub-3940256099942544/6300978111'
           : 'ca-app-pub-3940256099942544/2934735716';
     }
-    return CustomBannerAd(
+    return IAdmobBannerAd(
       id: unitId,
       size: size,
       callback: callback,
@@ -314,21 +314,10 @@ class ImobileAds {
   static Widget unityBannerAd({
     required String placementId,
     BannerSize size = BannerSize.standard,
-    void Function(ImobileAdsState, UnityAdsBannerError?, String?)? callback,
   }) {
-    return UnityBannerAd(
-      placementId: placementId,
+    return IUnityBannerAd(
+      id: placementId,
       size: size,
-      onLoad: (_) {
-        if (callback != null) {
-          callback(ImobileAdsState.loaded, null, null);
-        }
-      },
-      onFailed: (_, error, message) {
-        if (callback != null) {
-          callback(ImobileAdsState.loadFailed, error, message);
-        }
-      },
     );
   }
 
