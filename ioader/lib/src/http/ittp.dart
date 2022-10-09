@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 16:32:23
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-09 19:53:22
+ * @LastEditTime: 2022-10-09 21:47:03
  * @FilePath: /ioader/lib/src/http/ittp.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -37,7 +37,7 @@ class IttpClient {
             .allMatches(response.data)
             .map<String>((e) => e.group(0)!)
             .toList();
-        List<String> link = RegExp(r'/.*?.ts')
+        List<String> link = RegExp(r'.*?.ts')
             .allMatches(response.data)
             .map<String>((e) => e.group(0)!)
             .toList();
@@ -49,7 +49,10 @@ class IttpClient {
             completed: false,
           ));
         }
-        return its;
+        return {
+          'list': its,
+          'value': response.data,
+        };
       }
     }
     return 0;

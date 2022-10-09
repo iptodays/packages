@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-09 19:52:02
+ * @LastEditTime: 2022-10-09 21:41:38
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -121,9 +121,13 @@ class Ioader {
         iideo.lastUpdateAt = _millisecondsSinceEpoch;
         await _isar.iideos.put(iideo);
         var result = await IttpClient.getSize(videoUrl);
-        if (result is List) {
+        if (result is Map) {
+          File file = File('$dir/${id}_http_index.m3u8');
+          await file.create(recursive: true);
+          file.writeAsString(result['value']);
+          Iogger.d('`$id` 原始文件已创建完成');
           iideo.total = result.length;
-          iideo.its = result.cast<Its>();
+          iideo.its = result['list'];
         } else {
           iideo.total = result;
         }
