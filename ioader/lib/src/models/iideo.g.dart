@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'video.dart';
+part of 'iideo.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'video.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
 
-extension GetVideoCollection on Isar {
-  IsarCollection<Video> get videos => this.collection();
+extension GetIideoCollection on Isar {
+  IsarCollection<Iideo> get iideos => this.collection();
 }
 
-const VideoSchema = CollectionSchema(
-  name: r'Video',
-  id: 113594071489080673,
+const IideoSchema = CollectionSchema(
+  name: r'Iideo',
+  id: 6301815053031893561,
   properties: {
     r'coverUrl': PropertySchema(
       id: 0,
@@ -32,61 +32,80 @@ const VideoSchema = CollectionSchema(
       name: r'id',
       type: IsarType.string,
     ),
-    r'lastUpdateAt': PropertySchema(
+    r'its': PropertySchema(
       id: 3,
+      name: r'its',
+      type: IsarType.objectList,
+      target: r'Its',
+    ),
+    r'lastUpdateAt': PropertySchema(
+      id: 4,
       name: r'lastUpdateAt',
       type: IsarType.long,
     ),
     r'received': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'received',
       type: IsarType.long,
     ),
     r'status': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'status',
       type: IsarType.byte,
-      enumMap: _VideostatusEnumValueMap,
+      enumMap: _IideostatusEnumValueMap,
     ),
     r'total': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'total',
       type: IsarType.long,
     ),
     r'videoUrl': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'videoUrl',
       type: IsarType.string,
     )
   },
-  estimateSize: _videoEstimateSize,
-  serialize: _videoSerialize,
-  deserialize: _videoDeserialize,
-  deserializeProp: _videoDeserializeProp,
+  estimateSize: _iideoEstimateSize,
+  serialize: _iideoSerialize,
+  deserialize: _iideoDeserialize,
+  deserializeProp: _iideoDeserializeProp,
   idName: r'isarId',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
-  getId: _videoGetId,
-  getLinks: _videoGetLinks,
-  attach: _videoAttach,
+  embeddedSchemas: {r'Its': ItsSchema},
+  getId: _iideoGetId,
+  getLinks: _iideoGetLinks,
+  attach: _iideoAttach,
   version: '3.0.2',
 );
 
-int _videoEstimateSize(
-  Video object,
+int _iideoEstimateSize(
+  Iideo object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.coverUrl.length * 3;
   bytesCount += 3 + object.id.length * 3;
+  {
+    final list = object.its;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[Its]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += ItsSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
   bytesCount += 3 + object.videoUrl.length * 3;
   return bytesCount;
 }
 
-void _videoSerialize(
-  Video object,
+void _iideoSerialize(
+  Iideo object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -94,33 +113,46 @@ void _videoSerialize(
   writer.writeString(offsets[0], object.coverUrl);
   writer.writeLong(offsets[1], object.createdAt);
   writer.writeString(offsets[2], object.id);
-  writer.writeLong(offsets[3], object.lastUpdateAt);
-  writer.writeLong(offsets[4], object.received);
-  writer.writeByte(offsets[5], object.status.index);
-  writer.writeLong(offsets[6], object.total);
-  writer.writeString(offsets[7], object.videoUrl);
+  writer.writeObjectList<Its>(
+    offsets[3],
+    allOffsets,
+    ItsSchema.serialize,
+    object.its,
+  );
+  writer.writeLong(offsets[4], object.lastUpdateAt);
+  writer.writeLong(offsets[5], object.received);
+  writer.writeByte(offsets[6], object.status.index);
+  writer.writeLong(offsets[7], object.total);
+  writer.writeString(offsets[8], object.videoUrl);
 }
 
-Video _videoDeserialize(
+Iideo _iideoDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Video();
-  object.coverUrl = reader.readString(offsets[0]);
-  object.createdAt = reader.readLong(offsets[1]);
-  object.id = reader.readString(offsets[2]);
-  object.lastUpdateAt = reader.readLong(offsets[3]);
-  object.received = reader.readLong(offsets[4]);
-  object.status = _VideostatusValueEnumMap[reader.readByteOrNull(offsets[5])] ??
-      IoaderStatus.pending;
-  object.total = reader.readLong(offsets[6]);
-  object.videoUrl = reader.readString(offsets[7]);
+  final object = Iideo(
+    coverUrl: reader.readString(offsets[0]),
+    createdAt: reader.readLong(offsets[1]),
+    id: reader.readString(offsets[2]),
+    its: reader.readObjectList<Its>(
+      offsets[3],
+      ItsSchema.deserialize,
+      allOffsets,
+      Its(),
+    ),
+    lastUpdateAt: reader.readLongOrNull(offsets[4]),
+    received: reader.readLongOrNull(offsets[5]),
+    status: _IideostatusValueEnumMap[reader.readByteOrNull(offsets[6])] ??
+        IoaderStatus.pending,
+    total: reader.readLongOrNull(offsets[7]),
+    videoUrl: reader.readString(offsets[8]),
+  );
   return object;
 }
 
-P _videoDeserializeProp<P>(
+P _iideoDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -134,22 +166,29 @@ P _videoDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readObjectList<Its>(
+        offset,
+        ItsSchema.deserialize,
+        allOffsets,
+        Its(),
+      )) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 5:
-      return (_VideostatusValueEnumMap[reader.readByteOrNull(offset)] ??
-          IoaderStatus.pending) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 6:
-      return (reader.readLong(offset)) as P;
+      return (_IideostatusValueEnumMap[reader.readByteOrNull(offset)] ??
+          IoaderStatus.pending) as P;
     case 7:
+      return (reader.readLongOrNull(offset)) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-const _VideostatusEnumValueMap = {
+const _IideostatusEnumValueMap = {
   'pending': 0,
   'inProgress': 1,
   'paused': 2,
@@ -157,7 +196,7 @@ const _VideostatusEnumValueMap = {
   'deleted': 4,
   'completed': 5,
 };
-const _VideostatusValueEnumMap = {
+const _IideostatusValueEnumMap = {
   0: IoaderStatus.pending,
   1: IoaderStatus.inProgress,
   2: IoaderStatus.paused,
@@ -166,26 +205,26 @@ const _VideostatusValueEnumMap = {
   5: IoaderStatus.completed,
 };
 
-Id _videoGetId(Video object) {
+Id _iideoGetId(Iideo object) {
   return object.isarId;
 }
 
-List<IsarLinkBase<dynamic>> _videoGetLinks(Video object) {
+List<IsarLinkBase<dynamic>> _iideoGetLinks(Iideo object) {
   return [];
 }
 
-void _videoAttach(IsarCollection<dynamic> col, Id id, Video object) {}
+void _iideoAttach(IsarCollection<dynamic> col, Id id, Iideo object) {}
 
-extension VideoQueryWhereSort on QueryBuilder<Video, Video, QWhere> {
-  QueryBuilder<Video, Video, QAfterWhere> anyIsarId() {
+extension IideoQueryWhereSort on QueryBuilder<Iideo, Iideo, QWhere> {
+  QueryBuilder<Iideo, Iideo, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension VideoQueryWhere on QueryBuilder<Video, Video, QWhereClause> {
-  QueryBuilder<Video, Video, QAfterWhereClause> isarIdEqualTo(Id isarId) {
+extension IideoQueryWhere on QueryBuilder<Iideo, Iideo, QWhereClause> {
+  QueryBuilder<Iideo, Iideo, QAfterWhereClause> isarIdEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: isarId,
@@ -194,7 +233,7 @@ extension VideoQueryWhere on QueryBuilder<Video, Video, QWhereClause> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterWhereClause> isarIdNotEqualTo(Id isarId) {
+  QueryBuilder<Iideo, Iideo, QAfterWhereClause> isarIdNotEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -216,7 +255,7 @@ extension VideoQueryWhere on QueryBuilder<Video, Video, QWhereClause> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterWhereClause> isarIdGreaterThan(Id isarId,
+  QueryBuilder<Iideo, Iideo, QAfterWhereClause> isarIdGreaterThan(Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -225,7 +264,7 @@ extension VideoQueryWhere on QueryBuilder<Video, Video, QWhereClause> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterWhereClause> isarIdLessThan(Id isarId,
+  QueryBuilder<Iideo, Iideo, QAfterWhereClause> isarIdLessThan(Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -234,7 +273,7 @@ extension VideoQueryWhere on QueryBuilder<Video, Video, QWhereClause> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterWhereClause> isarIdBetween(
+  QueryBuilder<Iideo, Iideo, QAfterWhereClause> isarIdBetween(
     Id lowerIsarId,
     Id upperIsarId, {
     bool includeLower = true,
@@ -251,8 +290,8 @@ extension VideoQueryWhere on QueryBuilder<Video, Video, QWhereClause> {
   }
 }
 
-extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlEqualTo(
+extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -265,7 +304,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlGreaterThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -280,7 +319,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlLessThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -295,7 +334,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlBetween(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -314,7 +353,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlStartsWith(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -327,7 +366,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlEndsWith(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -340,7 +379,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlContains(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -352,7 +391,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlMatches(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -364,7 +403,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlIsEmpty() {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'coverUrl',
@@ -373,7 +412,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> coverUrlIsNotEmpty() {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'coverUrl',
@@ -382,7 +421,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> createdAtEqualTo(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> createdAtEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -392,7 +431,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> createdAtGreaterThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> createdAtGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -405,7 +444,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> createdAtLessThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> createdAtLessThan(
     int value, {
     bool include = false,
   }) {
@@ -418,7 +457,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> createdAtBetween(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> createdAtBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -435,7 +474,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idEqualTo(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -448,7 +487,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -463,7 +502,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idLessThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -478,7 +517,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idBetween(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -497,7 +536,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idStartsWith(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -510,7 +549,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idEndsWith(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -523,7 +562,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idContains(String value,
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idContains(String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -534,7 +573,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idMatches(String pattern,
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idMatches(String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -545,7 +584,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idIsEmpty() {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -554,7 +593,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> idIsNotEmpty() {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'id',
@@ -563,7 +602,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> isarIdEqualTo(Id value) {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> isarIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isarId',
@@ -572,7 +611,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> isarIdGreaterThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> isarIdGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -585,7 +624,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> isarIdLessThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> isarIdLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -598,7 +637,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> isarIdBetween(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -615,8 +654,124 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> lastUpdateAtEqualTo(
-      int value) {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'its',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'its',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'its',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'its',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'its',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'its',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'its',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'its',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> lastUpdateAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastUpdateAt',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> lastUpdateAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastUpdateAt',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> lastUpdateAtEqualTo(
+      int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'lastUpdateAt',
@@ -625,8 +780,8 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> lastUpdateAtGreaterThan(
-    int value, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> lastUpdateAtGreaterThan(
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -638,8 +793,8 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> lastUpdateAtLessThan(
-    int value, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> lastUpdateAtLessThan(
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -651,9 +806,9 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> lastUpdateAtBetween(
-    int lower,
-    int upper, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> lastUpdateAtBetween(
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -668,7 +823,24 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> receivedEqualTo(int value) {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> receivedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'received',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> receivedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'received',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> receivedEqualTo(
+      int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'received',
@@ -677,8 +849,8 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> receivedGreaterThan(
-    int value, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> receivedGreaterThan(
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -690,8 +862,8 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> receivedLessThan(
-    int value, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> receivedLessThan(
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -703,9 +875,9 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> receivedBetween(
-    int lower,
-    int upper, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> receivedBetween(
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -720,7 +892,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> statusEqualTo(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> statusEqualTo(
       IoaderStatus value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -730,7 +902,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> statusGreaterThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> statusGreaterThan(
     IoaderStatus value, {
     bool include = false,
   }) {
@@ -743,7 +915,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> statusLessThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> statusLessThan(
     IoaderStatus value, {
     bool include = false,
   }) {
@@ -756,7 +928,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> statusBetween(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> statusBetween(
     IoaderStatus lower,
     IoaderStatus upper, {
     bool includeLower = true,
@@ -773,7 +945,23 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> totalEqualTo(int value) {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> totalIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'total',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> totalIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'total',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> totalEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'total',
@@ -782,8 +970,8 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> totalGreaterThan(
-    int value, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> totalGreaterThan(
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -795,8 +983,8 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> totalLessThan(
-    int value, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> totalLessThan(
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -808,9 +996,9 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> totalBetween(
-    int lower,
-    int upper, {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> totalBetween(
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -825,7 +1013,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlEqualTo(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -838,7 +1026,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlGreaterThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -853,7 +1041,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlLessThan(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -868,7 +1056,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlBetween(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -887,7 +1075,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlStartsWith(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -900,7 +1088,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlEndsWith(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -913,7 +1101,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlContains(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -925,7 +1113,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlMatches(
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -937,7 +1125,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlIsEmpty() {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'videoUrl',
@@ -946,7 +1134,7 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Video, Video, QAfterFilterCondition> videoUrlIsNotEmpty() {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> videoUrlIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'videoUrl',
@@ -956,264 +1144,271 @@ extension VideoQueryFilter on QueryBuilder<Video, Video, QFilterCondition> {
   }
 }
 
-extension VideoQueryObject on QueryBuilder<Video, Video, QFilterCondition> {}
+extension IideoQueryObject on QueryBuilder<Iideo, Iideo, QFilterCondition> {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsElement(
+      FilterQuery<Its> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'its');
+    });
+  }
+}
 
-extension VideoQueryLinks on QueryBuilder<Video, Video, QFilterCondition> {}
+extension IideoQueryLinks on QueryBuilder<Iideo, Iideo, QFilterCondition> {}
 
-extension VideoQuerySortBy on QueryBuilder<Video, Video, QSortBy> {
-  QueryBuilder<Video, Video, QAfterSortBy> sortByCoverUrl() {
+extension IideoQuerySortBy on QueryBuilder<Iideo, Iideo, QSortBy> {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByCoverUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coverUrl', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByCoverUrlDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByCoverUrlDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coverUrl', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByCreatedAt() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByCreatedAtDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortById() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByIdDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByLastUpdateAt() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByLastUpdateAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastUpdateAt', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByLastUpdateAtDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByLastUpdateAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastUpdateAt', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByReceived() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'received', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByReceivedDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByReceivedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'received', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByStatus() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByStatusDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByTotal() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByTotal() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'total', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByTotalDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByTotalDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'total', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByVideoUrl() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByVideoUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'videoUrl', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> sortByVideoUrlDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByVideoUrlDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'videoUrl', Sort.desc);
     });
   }
 }
 
-extension VideoQuerySortThenBy on QueryBuilder<Video, Video, QSortThenBy> {
-  QueryBuilder<Video, Video, QAfterSortBy> thenByCoverUrl() {
+extension IideoQuerySortThenBy on QueryBuilder<Iideo, Iideo, QSortThenBy> {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByCoverUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coverUrl', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByCoverUrlDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByCoverUrlDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coverUrl', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByCreatedAt() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByCreatedAtDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenById() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByIsarId() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByIsarIdDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByLastUpdateAt() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByLastUpdateAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastUpdateAt', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByLastUpdateAtDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByLastUpdateAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastUpdateAt', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByReceived() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'received', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByReceivedDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByReceivedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'received', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByStatus() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByStatusDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'status', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByTotal() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByTotal() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'total', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByTotalDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByTotalDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'total', Sort.desc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByVideoUrl() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByVideoUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'videoUrl', Sort.asc);
     });
   }
 
-  QueryBuilder<Video, Video, QAfterSortBy> thenByVideoUrlDesc() {
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByVideoUrlDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'videoUrl', Sort.desc);
     });
   }
 }
 
-extension VideoQueryWhereDistinct on QueryBuilder<Video, Video, QDistinct> {
-  QueryBuilder<Video, Video, QDistinct> distinctByCoverUrl(
+extension IideoQueryWhereDistinct on QueryBuilder<Iideo, Iideo, QDistinct> {
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctByCoverUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'coverUrl', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Video, Video, QDistinct> distinctByCreatedAt() {
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'createdAt');
     });
   }
 
-  QueryBuilder<Video, Video, QDistinct> distinctById(
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctById(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Video, Video, QDistinct> distinctByLastUpdateAt() {
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctByLastUpdateAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'lastUpdateAt');
     });
   }
 
-  QueryBuilder<Video, Video, QDistinct> distinctByReceived() {
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctByReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'received');
     });
   }
 
-  QueryBuilder<Video, Video, QDistinct> distinctByStatus() {
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctByStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'status');
     });
   }
 
-  QueryBuilder<Video, Video, QDistinct> distinctByTotal() {
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctByTotal() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'total');
     });
   }
 
-  QueryBuilder<Video, Video, QDistinct> distinctByVideoUrl(
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctByVideoUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'videoUrl', caseSensitive: caseSensitive);
@@ -1221,56 +1416,62 @@ extension VideoQueryWhereDistinct on QueryBuilder<Video, Video, QDistinct> {
   }
 }
 
-extension VideoQueryProperty on QueryBuilder<Video, Video, QQueryProperty> {
-  QueryBuilder<Video, int, QQueryOperations> isarIdProperty() {
+extension IideoQueryProperty on QueryBuilder<Iideo, Iideo, QQueryProperty> {
+  QueryBuilder<Iideo, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarId');
     });
   }
 
-  QueryBuilder<Video, String, QQueryOperations> coverUrlProperty() {
+  QueryBuilder<Iideo, String, QQueryOperations> coverUrlProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'coverUrl');
     });
   }
 
-  QueryBuilder<Video, int, QQueryOperations> createdAtProperty() {
+  QueryBuilder<Iideo, int, QQueryOperations> createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
     });
   }
 
-  QueryBuilder<Video, String, QQueryOperations> idProperty() {
+  QueryBuilder<Iideo, String, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<Video, int, QQueryOperations> lastUpdateAtProperty() {
+  QueryBuilder<Iideo, List<Its>?, QQueryOperations> itsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'its');
+    });
+  }
+
+  QueryBuilder<Iideo, int?, QQueryOperations> lastUpdateAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastUpdateAt');
     });
   }
 
-  QueryBuilder<Video, int, QQueryOperations> receivedProperty() {
+  QueryBuilder<Iideo, int?, QQueryOperations> receivedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'received');
     });
   }
 
-  QueryBuilder<Video, IoaderStatus, QQueryOperations> statusProperty() {
+  QueryBuilder<Iideo, IoaderStatus, QQueryOperations> statusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'status');
     });
   }
 
-  QueryBuilder<Video, int, QQueryOperations> totalProperty() {
+  QueryBuilder<Iideo, int?, QQueryOperations> totalProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'total');
     });
   }
 
-  QueryBuilder<Video, String, QQueryOperations> videoUrlProperty() {
+  QueryBuilder<Iideo, String, QQueryOperations> videoUrlProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'videoUrl');
     });

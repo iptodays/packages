@@ -25,7 +25,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   isar_generator: *isar_version
-  build_runner: any
+  build_runner: ^2.2.1
 
 flutter:
   # assets:
