@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-09 21:41:38
+ * @LastEditTime: 2022-10-11 22:09:39
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -12,7 +12,6 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:ioader/src/extension/extension.dart';
 import 'package:ioader/src/http/ittp.dart';
-import 'package:ioader/src/models/its.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -106,35 +105,45 @@ class Ioader {
     required String videoUrl,
     required String coverUrl,
   }) async {
-    if ((await getVideoById(id)) == null) {
-      Directory directory = Directory('$dir/$id/');
+    Iideo? iideo = await getVideoById(id);
+    String path = '$dir/$id/';
+    if (iideo == null) {
+      Directory directory = Directory(path);
       await directory.create(recursive: true);
+
       await _isar.writeTxn(() async {
-        var iideo = Iideo(
+        iideo = Iideo(
           id: id,
           videoUrl: videoUrl,
           coverUrl: coverUrl,
           createdAt: _millisecondsSinceEpoch,
         );
-        _isar.iideos.put(iideo);
-        await IttpClient.image(coverUrl, '${directory.path}/${id}_cover');
-        iideo.lastUpdateAt = _millisecondsSinceEpoch;
-        await _isar.iideos.put(iideo);
+        _isar.iideos.put(iideo!);
+        await IttpClient.image(coverUrl, '$path${id}_cover');
+        iideo!.lastUpdateAt = _millisecondsSinceEpoch;
+        await _isar.iideos.put(iideo!);
         var result = await IttpClient.getSize(videoUrl);
         if (result is Map) {
-          File file = File('$dir/${id}_http_index.m3u8');
+          File file = File('$path${id}_http_index.m3u8');
           await file.create(recursive: true);
           file.writeAsString(result['value']);
-          Iogger.d('`$id` 原始文件已创建完成');
-          iideo.total = result.length;
-          iideo.its = result['list'];
+          Iogger.d('`$id` 原始索引文件已创建完成');
+
+          iideo!.i3u8 = result['i3u8'];
+          iideo!.total = iideo!.i3u8!.iss!.length;
+          File ffile = File('$path${id}_index.m3u8');
+          await ffile.create(recursive: true);
+          ffile.writeAsString('${iideo!.i3u8!.header}${iideo!.i3u8!.end}');
+          Iogger.d('`$id` 最终索引文件已创建完成');
         } else {
-          iideo.total = result;
+          iideo!.total = result;
         }
-        iideo.lastUpdateAt = _millisecondsSinceEpoch;
-        await _isar.iideos.put(iideo);
+        iideo!.lastUpdateAt = _millisecondsSinceEpoch;
+        iideo!.received = 0;
+        await _isar.iideos.put(iideo!);
       });
-    }
+    } else {}
+    IttpClient.download(iideo!, path, _isar);
   }
 
   /// 删除指定id的视频

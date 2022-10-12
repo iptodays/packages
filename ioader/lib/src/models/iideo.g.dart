@@ -27,16 +27,16 @@ const IideoSchema = CollectionSchema(
       name: r'createdAt',
       type: IsarType.long,
     ),
-    r'id': PropertySchema(
+    r'i3u8': PropertySchema(
       id: 2,
+      name: r'i3u8',
+      type: IsarType.object,
+      target: r'I3u8',
+    ),
+    r'id': PropertySchema(
+      id: 3,
       name: r'id',
       type: IsarType.string,
-    ),
-    r'its': PropertySchema(
-      id: 3,
-      name: r'its',
-      type: IsarType.objectList,
-      target: r'Its',
     ),
     r'lastUpdateAt': PropertySchema(
       id: 4,
@@ -72,7 +72,7 @@ const IideoSchema = CollectionSchema(
   idName: r'isarId',
   indexes: {},
   links: {},
-  embeddedSchemas: {r'Its': ItsSchema},
+  embeddedSchemas: {r'I3u8': I3u8Schema, r'Is': IsSchema},
   getId: _iideoGetId,
   getLinks: _iideoGetLinks,
   attach: _iideoAttach,
@@ -86,20 +86,14 @@ int _iideoEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.coverUrl.length * 3;
-  bytesCount += 3 + object.id.length * 3;
   {
-    final list = object.its;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        final offsets = allOffsets[Its]!;
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount += ItsSchema.estimateSize(value, offsets, allOffsets);
-        }
-      }
+    final value = object.i3u8;
+    if (value != null) {
+      bytesCount +=
+          3 + I3u8Schema.estimateSize(value, allOffsets[I3u8]!, allOffsets);
     }
   }
+  bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.videoUrl.length * 3;
   return bytesCount;
 }
@@ -112,13 +106,13 @@ void _iideoSerialize(
 ) {
   writer.writeString(offsets[0], object.coverUrl);
   writer.writeLong(offsets[1], object.createdAt);
-  writer.writeString(offsets[2], object.id);
-  writer.writeObjectList<Its>(
-    offsets[3],
+  writer.writeObject<I3u8>(
+    offsets[2],
     allOffsets,
-    ItsSchema.serialize,
-    object.its,
+    I3u8Schema.serialize,
+    object.i3u8,
   );
+  writer.writeString(offsets[3], object.id);
   writer.writeLong(offsets[4], object.lastUpdateAt);
   writer.writeLong(offsets[5], object.received);
   writer.writeByte(offsets[6], object.status.index);
@@ -135,13 +129,12 @@ Iideo _iideoDeserialize(
   final object = Iideo(
     coverUrl: reader.readString(offsets[0]),
     createdAt: reader.readLong(offsets[1]),
-    id: reader.readString(offsets[2]),
-    its: reader.readObjectList<Its>(
-      offsets[3],
-      ItsSchema.deserialize,
+    i3u8: reader.readObjectOrNull<I3u8>(
+      offsets[2],
+      I3u8Schema.deserialize,
       allOffsets,
-      Its(),
     ),
+    id: reader.readString(offsets[3]),
     lastUpdateAt: reader.readLongOrNull(offsets[4]),
     received: reader.readLongOrNull(offsets[5]),
     status: _IideostatusValueEnumMap[reader.readByteOrNull(offsets[6])] ??
@@ -164,14 +157,13 @@ P _iideoDeserializeProp<P>(
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
-    case 3:
-      return (reader.readObjectList<Its>(
+      return (reader.readObjectOrNull<I3u8>(
         offset,
-        ItsSchema.deserialize,
+        I3u8Schema.deserialize,
         allOffsets,
-        Its(),
       )) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
     case 4:
       return (reader.readLongOrNull(offset)) as P;
     case 5:
@@ -474,6 +466,22 @@ extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> i3u8IsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'i3u8',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> i3u8IsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'i3u8',
+      ));
+    });
+  }
+
   QueryBuilder<Iideo, Iideo, QAfterFilterCondition> idEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -651,106 +659,6 @@ extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
         upper: upper,
         includeUpper: includeUpper,
       ));
-    });
-  }
-
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'its',
-      ));
-    });
-  }
-
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'its',
-      ));
-    });
-  }
-
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'its',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'its',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'its',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'its',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'its',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'its',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
     });
   }
 
@@ -1145,10 +1053,9 @@ extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
 }
 
 extension IideoQueryObject on QueryBuilder<Iideo, Iideo, QFilterCondition> {
-  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> itsElement(
-      FilterQuery<Its> q) {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> i3u8(FilterQuery<I3u8> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'its');
+      return query.object(q, r'i3u8');
     });
   }
 }
@@ -1435,15 +1342,15 @@ extension IideoQueryProperty on QueryBuilder<Iideo, Iideo, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Iideo, String, QQueryOperations> idProperty() {
+  QueryBuilder<Iideo, I3u8?, QQueryOperations> i3u8Property() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addPropertyName(r'i3u8');
     });
   }
 
-  QueryBuilder<Iideo, List<Its>?, QQueryOperations> itsProperty() {
+  QueryBuilder<Iideo, String, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'its');
+      return query.addPropertyName(r'id');
     });
   }
 

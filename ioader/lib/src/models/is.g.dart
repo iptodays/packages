@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'its.dart';
+part of 'is.dart';
 
 // **************************************************************************
 // IsarEmbeddedGenerator
@@ -9,34 +9,29 @@ part of 'its.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
 
-const ItsSchema = Schema(
-  name: r'Its',
-  id: -7984335027981273927,
+const IsSchema = Schema(
+  name: r'Is',
+  id: -3879182409863770677,
   properties: {
-    r'completed': PropertySchema(
-      id: 0,
-      name: r'completed',
-      type: IsarType.bool,
-    ),
     r'extinf': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'extinf',
       type: IsarType.string,
     ),
     r'link': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'link',
       type: IsarType.string,
     )
   },
-  estimateSize: _itsEstimateSize,
-  serialize: _itsSerialize,
-  deserialize: _itsDeserialize,
-  deserializeProp: _itsDeserializeProp,
+  estimateSize: _isEstimateSize,
+  serialize: _isSerialize,
+  deserialize: _isDeserialize,
+  deserializeProp: _isDeserializeProp,
 );
 
-int _itsEstimateSize(
-  Its object,
+int _isEstimateSize(
+  Is object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -46,32 +41,30 @@ int _itsEstimateSize(
   return bytesCount;
 }
 
-void _itsSerialize(
-  Its object,
+void _isSerialize(
+  Is object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeBool(offsets[0], object.completed);
-  writer.writeString(offsets[1], object.extinf);
-  writer.writeString(offsets[2], object.link);
+  writer.writeString(offsets[0], object.extinf);
+  writer.writeString(offsets[1], object.link);
 }
 
-Its _itsDeserialize(
+Is _isDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Its(
-    completed: reader.readBoolOrNull(offsets[0]) ?? false,
-    extinf: reader.readStringOrNull(offsets[1]) ?? '',
-    link: reader.readStringOrNull(offsets[2]) ?? '',
+  final object = Is(
+    extinf: reader.readStringOrNull(offsets[0]) ?? '',
+    link: reader.readStringOrNull(offsets[1]) ?? '',
   );
   return object;
 }
 
-P _itsDeserializeProp<P>(
+P _isDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -79,27 +72,16 @@ P _itsDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 1:
       return (reader.readStringOrNull(offset) ?? '') as P;
-    case 2:
+    case 1:
       return (reader.readStringOrNull(offset) ?? '') as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
-  QueryBuilder<Its, Its, QAfterFilterCondition> completedEqualTo(bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'completed',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfEqualTo(
+extension IsQueryFilter on QueryBuilder<Is, Is, QFilterCondition> {
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -112,7 +94,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfGreaterThan(
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -127,7 +109,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfLessThan(
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -142,7 +124,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfBetween(
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -161,7 +143,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfStartsWith(
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -174,7 +156,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfEndsWith(
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -187,7 +169,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfContains(String value,
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfContains(String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -198,7 +180,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfMatches(String pattern,
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfMatches(String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -209,7 +191,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfIsEmpty() {
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'extinf',
@@ -218,7 +200,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> extinfIsNotEmpty() {
+  QueryBuilder<Is, Is, QAfterFilterCondition> extinfIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'extinf',
@@ -227,7 +209,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkEqualTo(
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -240,7 +222,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkGreaterThan(
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -255,7 +237,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkLessThan(
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -270,7 +252,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkBetween(
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -289,7 +271,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkStartsWith(
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -302,7 +284,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkEndsWith(
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -315,7 +297,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkContains(String value,
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkContains(String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -326,7 +308,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkMatches(String pattern,
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkMatches(String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -337,7 +319,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkIsEmpty() {
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'link',
@@ -346,7 +328,7 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Its, Its, QAfterFilterCondition> linkIsNotEmpty() {
+  QueryBuilder<Is, Is, QAfterFilterCondition> linkIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'link',
@@ -356,4 +338,4 @@ extension ItsQueryFilter on QueryBuilder<Its, Its, QFilterCondition> {
   }
 }
 
-extension ItsQueryObject on QueryBuilder<Its, Its, QFilterCondition> {}
+extension IsQueryObject on QueryBuilder<Is, Is, QFilterCondition> {}

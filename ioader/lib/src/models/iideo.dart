@@ -2,15 +2,17 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:49:02
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-09 19:40:17
+ * @LastEditTime: 2022-10-11 15:01:49
  * @FilePath: /ioader/lib/src/models/iideo.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
  */
 
 import 'package:ioader/src/extension/extension.dart';
-import 'package:ioader/src/models/its.dart';
 import 'package:isar/isar.dart';
+
+import 'i3u8.dart';
+import 'is.dart';
 
 part 'iideo.g.dart';
 
@@ -39,8 +41,8 @@ class Iideo {
   @enumerated
   IoaderStatus status = IoaderStatus.pending;
 
-  /// m3u8片段
-  List<Its>? its;
+  /// m3u8信息
+  I3u8? i3u8;
 
   /// 文件总大小
   int? total;
@@ -60,7 +62,7 @@ class Iideo {
     required this.coverUrl,
     required this.createdAt,
     this.status = IoaderStatus.pending,
-    this.its,
+    this.i3u8,
     this.total,
     this.received,
     this.lastUpdateAt,
@@ -74,7 +76,7 @@ class Iideo {
       'createdAt': createdAt,
       'status': status,
       'total': total,
-      'ts': its,
+      'i3u8': i3u8?.toJson(),
       'received': received,
       'lastUpdateAt': lastUpdateAt,
     };
