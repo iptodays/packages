@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-12 19:15:15
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-13 23:32:10
+ * @LastEditTime: 2022-10-14 15:31:25
  * @FilePath: /iepub/lib/src/iepub_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -28,6 +28,7 @@ class Iepub {
   late final String _dir;
 
   /// database
+  Isar get isar => _isar;
   late final Isar _isar;
 
   static Iepub get instance => Iepub._instanceFor();
@@ -81,38 +82,16 @@ class Iepub {
     String outDir = '$dir/$id';
     await IZip.decoder(data, outDir, verify: verify, password: password);
     IXml iXml = IXml(outDir);
-    Map val = await iXml.parse();
+    Map val = await iXml.parseEpub();
     epubBook = EpubBook(
       id: id,
       chapters: val['chapters'],
-      mapping: val['mapping'],
     );
     await _isar.writeTxn(() async {
       _isar.epubBooks.put(epubBook!);
     });
     Iogger.d('`$id` 已载入成功');
     return epubBook;
-  }
-
-  /// 载入章节
-  /// @[start]: 开始下标
-  /// @[end]: 结束下标
-  Future<void> loadChapter(String id, {int start = 0, end = 5}) async {
-    EpubBook? epubBook = await _isar.epubBooks.get(id.fastHash);
-    assert(epubBook != null, '`$id` 不存在');
-    assert(
-      start >= 0 && start < end && end < epubBook!.chapters.length,
-      '下标错误',
-    );
-    final chapters = epubBook!.chapters.getRange(start, end);
-    for (var chapter in chapters) {
-      if (chapter.content == null) {
-        final mapping = epubBook.mapping.singleWhere(
-          (element) => element.id == chapter.id,
-        );
-        Iogger.d(mapping.toJson());
-      }
-    }
   }
 
   /// 删除本地epub数据

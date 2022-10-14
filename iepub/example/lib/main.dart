@@ -2,15 +2,18 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-12 21:26:28
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-13 23:28:54
+ * @LastEditTime: 2022-10-14 16:32:31
  * @FilePath: /iepub/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
  */
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:iepub/iepub.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:styled_text/styled_text.dart';
 
 void main() async {
   await Iepub.instance.initialize();
@@ -44,9 +47,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   EpubBook? epubBook;
 
-  String? html;
-
   int index = 0;
+
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
+
+  @override
+  void initState() {
+    itemPositionsListener.itemPositions.addListener(
+      () {},
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +71,16 @@ class _MyHomePageState extends State<MyHomePage> {
         child: SafeArea(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: epubBook?.chapters.length,
+            itemCount: epubBook == null ? 0 : epubBook!.chapters.length,
             itemBuilder: (_, index) {
               final chapter = epubBook!.chapters[index];
               return InkWell(
                 onTap: () async {
                   this.index = index;
-                  // html = await Iepub.instance.getContentByIndex(
-                  //   epubBook!.id,
-                  //   index: index,
-                  // );
+                  itemScrollController.scrollTo(
+                    index: index,
+                    duration: const Duration(milliseconds: 250),
+                  );
                   setState(() {});
                 },
                 child: SizedBox(
@@ -99,8 +112,32 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                child: Html(data: html ?? ''),
+              child: ScrollablePositionedList.builder(
+                itemScrollController: itemScrollController,
+                itemPositionsListener: itemPositionsListener,
+                itemCount: epubBook == null ? 0 : epubBook!.chapters.length,
+                itemBuilder: (_, index) {
+                  var chapter = epubBook!.chapters[index];
+                  if (chapter.content != null) {
+                    return StyledText(
+                      text: chapter.content!,
+                      tags: {
+                        'img': StyledTextWidgetBuilderTag((_, args) {
+                          return Image.file(
+                            File(
+                              '${epubBook!.dir}/${chapter.dir}/${args['src']}',
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            cacheWidth:
+                                MediaQuery.of(context).size.width.toInt(),
+                          );
+                        }),
+                      },
+                      style: TextStyle(),
+                    );
+                  }
+                  return Container();
+                },
               ),
             ),
             SingleChildScrollView(
@@ -134,7 +171,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     onPressed: () async {
-                      Iepub.instance.removeEpubById('3');
+                      await Iepub.instance.removeEpubById('3');
+                      epubBook = null;
+                      setState(() {});
                     },
                   ),
                   MaterialButton(
@@ -146,10 +185,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     onPressed: () async {
-                      Iepub.instance.loadChapter(
-                        '3',
-                        start: 0,
-                        end: 5,
+                      await epubBook!.loadChapter(
+                        end: epubBook!.chapters.length,
                       );
                     },
                   ),
@@ -167,6 +204,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       //   epubBook!.id,
                       //   index: index,
                       // );
+                      itemScrollController.scrollTo(
+                        index: index,
+                        duration: const Duration(milliseconds: 250),
+                      );
                       setState(() {});
                     },
                   ),

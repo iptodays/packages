@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'epubchapte.dart';
+part of 'epubchapter.dart';
 
 // **************************************************************************
 // IsarEmbeddedGenerator
@@ -18,18 +18,23 @@ const EpubChapterSchema = Schema(
       name: r'content',
       type: IsarType.string,
     ),
-    r'id': PropertySchema(
+    r'href': PropertySchema(
       id: 1,
+      name: r'href',
+      type: IsarType.string,
+    ),
+    r'id': PropertySchema(
+      id: 2,
       name: r'id',
       type: IsarType.long,
     ),
     r'originalContent': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'originalContent',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'title',
       type: IsarType.string,
     )
@@ -52,6 +57,7 @@ int _epubChapterEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.href.length * 3;
   {
     final value = object.originalContent;
     if (value != null) {
@@ -69,9 +75,10 @@ void _epubChapterSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.content);
-  writer.writeLong(offsets[1], object.id);
-  writer.writeString(offsets[2], object.originalContent);
-  writer.writeString(offsets[3], object.title);
+  writer.writeString(offsets[1], object.href);
+  writer.writeLong(offsets[2], object.id);
+  writer.writeString(offsets[3], object.originalContent);
+  writer.writeString(offsets[4], object.title);
 }
 
 EpubChapter _epubChapterDeserialize(
@@ -82,9 +89,10 @@ EpubChapter _epubChapterDeserialize(
 ) {
   final object = EpubChapter();
   object.content = reader.readStringOrNull(offsets[0]);
-  object.id = reader.readLong(offsets[1]);
-  object.originalContent = reader.readStringOrNull(offsets[2]);
-  object.title = reader.readString(offsets[3]);
+  object.href = reader.readString(offsets[1]);
+  object.id = reader.readLong(offsets[2]);
+  object.originalContent = reader.readStringOrNull(offsets[3]);
+  object.title = reader.readString(offsets[4]);
   return object;
 }
 
@@ -98,10 +106,12 @@ P _epubChapterDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -257,6 +267,137 @@ extension EpubChapterQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'content',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'href',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'href',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'href',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'href',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'href',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'href',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'href',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'href',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition> hrefIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'href',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EpubChapter, EpubChapter, QAfterFilterCondition>
+      hrefIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'href',
         value: '',
       ));
     });

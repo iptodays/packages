@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-13 13:27:54
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-13 23:08:20
+ * @LastEditTime: 2022-10-14 15:31:46
  * @FilePath: /iepub/lib/src/parse/xml.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -13,8 +13,7 @@ import 'package:iepub/src/log/log.dart';
 import 'package:iepub/src/model/epub/metadata.dart';
 import 'package:iepub/src/model/epub/manifest.dart';
 import 'package:iepub/src/model/epub/spine.dart';
-import 'package:iepub/src/model/epubchapte.dart';
-import 'package:iepub/src/model/epubchapter_mapping.dart';
+import 'package:iepub/src/model/epubchapter.dart';
 import 'package:xml/xml.dart';
 
 class IXml {
@@ -24,7 +23,8 @@ class IXml {
 
   IXml(this.path);
 
-  Future<Map> parse() async {
+  /// 解析epub
+  Future<Map> parseEpub() async {
     params.clear();
     String opfPath = await _getOpfPath();
     await _parseOpf('$path/$opfPath');
@@ -47,8 +47,8 @@ class IXml {
     final xmlDocument = XmlDocument.parse(xml);
     final metadatas = xmlDocument.findAllElements('metadata');
     if (metadatas.isNotEmpty) {
-      Metadata metadata = _parseMetadata(metadatas.first);
-      Iogger.d(metadata.toJson());
+      // Metadata metadata = _parseMetadata(metadatas.first);
+      // Iogger.d(metadata.toJson());
     }
     final manifests = xmlDocument.findAllElements('manifest');
     if (manifests.isNotEmpty) {
@@ -124,22 +124,44 @@ class IXml {
     final navMap = xmlDocument.findAllElements('navMap').first;
     final navPoints = navMap.findAllElements('navPoint');
     List<EpubChapter> chapters = [];
-    List<EpubChapterMapping> mapping = [];
     for (var i = 0; i < navPoints.length; i++) {
       final element = navPoints.elementAt(i);
       chapters.add(
         EpubChapter()
           ..id = i
-          ..title = element.findAllElements('text').first.text,
-      );
-      mapping.add(
-        EpubChapterMapping()
-          ..id = i
+          ..title = element.findAllElements('text').first.text
           ..href =
               element.findAllElements('content').first.getAttribute('src')!,
       );
     }
     params['chapters'] = chapters;
-    params['mapping'] = mapping;
+  }
+
+  /// 解析html
+  Future<Map<String, String>> parseHtml() async {
+    Iogger.d('html: $path');
+    params.clear();
+    File file = File(path);
+    String html = await file.readAsString();
+    final xmlDocument = XmlDocument.parse(html);
+    final xmlElement = xmlDocument.findAllElements('body').first;
+    String innerText = '';
+    for (var element in xmlElement.childElements) {
+      if (element.text.trim().isNotEmpty) {
+        innerText += '\n${element.text}';
+      } else {
+        var imgs = element.findAllElements('img');
+        for (var img in imgs) {
+          String? src = img.getAttribute('src');
+          if (src != null) {
+            innerText += '<img src="$src"></img>';
+          }
+        }
+      }
+    }
+    return {
+      'innerText': innerText,
+      'html': html,
+    };
   }
 }

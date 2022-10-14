@@ -27,12 +27,6 @@ const EpubBookSchema = CollectionSchema(
       id: 1,
       name: r'id',
       type: IsarType.string,
-    ),
-    r'mapping': PropertySchema(
-      id: 2,
-      name: r'mapping',
-      type: IsarType.objectList,
-      target: r'EpubChapterMapping',
     )
   },
   estimateSize: _epubBookEstimateSize,
@@ -42,10 +36,7 @@ const EpubBookSchema = CollectionSchema(
   idName: r'isarId',
   indexes: {},
   links: {},
-  embeddedSchemas: {
-    r'EpubChapter': EpubChapterSchema,
-    r'EpubChapterMapping': EpubChapterMappingSchema
-  },
+  embeddedSchemas: {r'EpubChapter': EpubChapterSchema},
   getId: _epubBookGetId,
   getLinks: _epubBookGetLinks,
   attach: _epubBookAttach,
@@ -67,15 +58,6 @@ int _epubBookEstimateSize(
     }
   }
   bytesCount += 3 + object.id.length * 3;
-  bytesCount += 3 + object.mapping.length * 3;
-  {
-    final offsets = allOffsets[EpubChapterMapping]!;
-    for (var i = 0; i < object.mapping.length; i++) {
-      final value = object.mapping[i];
-      bytesCount +=
-          EpubChapterMappingSchema.estimateSize(value, offsets, allOffsets);
-    }
-  }
   return bytesCount;
 }
 
@@ -92,12 +74,6 @@ void _epubBookSerialize(
     object.chapters,
   );
   writer.writeString(offsets[1], object.id);
-  writer.writeObjectList<EpubChapterMapping>(
-    offsets[2],
-    allOffsets,
-    EpubChapterMappingSchema.serialize,
-    object.mapping,
-  );
 }
 
 EpubBook _epubBookDeserialize(
@@ -115,13 +91,6 @@ EpubBook _epubBookDeserialize(
         ) ??
         [],
     id: reader.readString(offsets[1]),
-    mapping: reader.readObjectList<EpubChapterMapping>(
-          offsets[2],
-          EpubChapterMappingSchema.deserialize,
-          allOffsets,
-          EpubChapterMapping(),
-        ) ??
-        [],
   );
   return object;
 }
@@ -143,14 +112,6 @@ P _epubBookDeserializeProp<P>(
           []) as P;
     case 1:
       return (reader.readString(offset)) as P;
-    case 2:
-      return (reader.readObjectList<EpubChapterMapping>(
-            offset,
-            EpubChapterMappingSchema.deserialize,
-            allOffsets,
-            EpubChapterMapping(),
-          ) ??
-          []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -513,91 +474,6 @@ extension EpubBookQueryFilter
       ));
     });
   }
-
-  QueryBuilder<EpubBook, EpubBook, QAfterFilterCondition> mappingLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mapping',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<EpubBook, EpubBook, QAfterFilterCondition> mappingIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mapping',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<EpubBook, EpubBook, QAfterFilterCondition> mappingIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mapping',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<EpubBook, EpubBook, QAfterFilterCondition> mappingLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mapping',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<EpubBook, EpubBook, QAfterFilterCondition>
-      mappingLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mapping',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<EpubBook, EpubBook, QAfterFilterCondition> mappingLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mapping',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
-    });
-  }
 }
 
 extension EpubBookQueryObject
@@ -606,13 +482,6 @@ extension EpubBookQueryObject
       FilterQuery<EpubChapter> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'chapters');
-    });
-  }
-
-  QueryBuilder<EpubBook, EpubBook, QAfterFilterCondition> mappingElement(
-      FilterQuery<EpubChapterMapping> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'mapping');
     });
   }
 }
@@ -689,13 +558,6 @@ extension EpubBookQueryProperty
   QueryBuilder<EpubBook, String, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
-    });
-  }
-
-  QueryBuilder<EpubBook, List<EpubChapterMapping>, QQueryOperations>
-      mappingProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'mapping');
     });
   }
 }

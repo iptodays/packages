@@ -36,15 +36,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  flutter_html: ^2.2.1
-  simple_html_css: ^4.0.0
+  styled_text: ^6.0.0
+  scrollable_positioned_list: ^0.3.5
 
   iepub:
     path: ../
 
-dependency_overrides:
-  xml: ^6.1.0
-  flutter_svg: ^1.1.5
+# dependency_overrides:
+#   xml: ^6.1.0
+#   flutter_svg: ^1.1.5
 
 dev_dependencies:
   flutter_test:
