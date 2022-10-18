@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 16:32:23
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-11 22:06:07
+ * @LastEditTime: 2022-10-18 19:24:50
  * @FilePath: /ioader/lib/src/http/ittp.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -86,6 +86,10 @@ class IttpClient {
     String path,
     Isar isar,
   ) async {
+    bool isExists = await Directory(path).exists();
+    if (!isExists || iideo.status == IoaderStatus.paused) {
+      return;
+    }
     if (iideo.total == iideo.received) {
       if (iideo.status != IoaderStatus.completed) {
         iideo.status = IoaderStatus.completed;
@@ -99,7 +103,7 @@ class IttpClient {
     if (iideo.i3u8 != null) {
       // 当前资源为m3u8
       I3u8 i3u8 = iideo.i3u8!;
-      if (iideo.status != IoaderStatus.inProgress) {
+      if (iideo.status == IoaderStatus.pending) {
         iideo.status = IoaderStatus.inProgress;
       }
       Is val = i3u8.iss![iideo.received!];
@@ -110,18 +114,21 @@ class IttpClient {
       );
       if (response.statusCode == HttpStatus.ok) {
         File ffile = File('$path${iideo.id}_index.m3u8');
-        String index = await ffile.readAsString();
-        await ffile.writeAsString(
-          index.replaceAll(
-            i3u8.end!,
-            '${val.extinf}\n${iideo.received}.ts\n${i3u8.end}',
-          ),
-        );
-        iideo.received = iideo.received! + 1;
-        iideo.lastUpdateAt = DateTime.now().millisecondsSinceEpoch;
-        await isar.writeTxn(() async {
-          await isar.iideos.put(iideo);
-        });
+        bool isExists = await ffile.exists();
+        if (isExists) {
+          String index = await ffile.readAsString();
+          await ffile.writeAsString(
+            index.replaceAll(
+              i3u8.end!,
+              '${val.extinf}\n${iideo.received}.ts\n${i3u8.end}',
+            ),
+          );
+          iideo.received = iideo.received! + 1;
+          iideo.lastUpdateAt = DateTime.now().millisecondsSinceEpoch;
+          await isar.writeTxn(() async {
+            await isar.iideos.put(iideo);
+          });
+        }
       }
     }
     await download(iideo, path, isar);

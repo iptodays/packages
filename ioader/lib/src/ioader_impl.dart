@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-11 22:09:39
+ * @LastEditTime: 2022-10-18 19:25:45
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -100,7 +100,7 @@ class Ioader {
 
   /// 创建下载任务
   /// 已存在的任务不会二次写入
-  Future<void> putVideo(
+  Future<void> put(
     String id, {
     required String videoUrl,
     required String coverUrl,
@@ -144,6 +144,23 @@ class Ioader {
       });
     } else {}
     IttpClient.download(iideo!, path, _isar);
+  }
+
+  /// 停止下载
+  Future<void> stop(
+    String id,
+  ) async {
+    Iideo? iideo = await getVideoById(id);
+    if (iideo == null) {
+      Iogger.d('`$id` 不存在');
+      return;
+    }
+    if (iideo.status == IoaderStatus.inProgress) {
+      iideo.status = IoaderStatus.paused;
+      await _isar.writeTxn(() async {
+        await _isar.iideos.clear();
+      });
+    }
   }
 
   /// 删除指定id的视频

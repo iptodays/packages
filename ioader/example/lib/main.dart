@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 14:36:05
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-09 17:48:55
+ * @LastEditTime: 2022-10-18 19:26:19
  * @FilePath: /ioader/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
   /// 下载
   void download() async {
     if (index != null) {
-      ioader.putVideo(
+      ioader.put(
         list[index!].id,
         videoUrl: list[index!].videoUrl,
         coverUrl: list[index!].coverUrl,
