@@ -19,6 +19,11 @@ dependencies:
   # https://pub.dev/packages/isar
   isar: *isar_version
   isar_flutter_libs: *isar_version
+  # https://pub.dev/packages/shelf
+  shelf: ^1.4.0
+  shelf_static: ^1.1.1
+  # https://pub.dev/packages/r_get_ip_v3
+  r_get_ip_v3: ^0.1.1
 
 dev_dependencies:
   flutter_test:

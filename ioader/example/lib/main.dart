@@ -2,11 +2,13 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 14:36:05
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-18 19:26:19
+ * @LastEditTime: 2022-10-23 22:24:06
  * @FilePath: /ioader/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
  */
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ioader/ioader.dart';
 
@@ -85,6 +87,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const HistoryPage(),
+              ),
+            ),
+            icon: const Icon(
+              Icons.history,
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -138,6 +152,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.white,
                   ),
                 ),
+                ElevatedButton(
+                  onPressed: play,
+                  child: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
           ],
@@ -149,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
   /// 下载
   void download() async {
     if (index != null) {
-      ioader.put(
+      await ioader.put(
         list[index!].id,
         videoUrl: list[index!].videoUrl,
         coverUrl: list[index!].coverUrl,
@@ -162,5 +183,112 @@ class _MyHomePageState extends State<MyHomePage> {
     if (index != null) {
       ioader.removeVideoByIds([list[index!].id]);
     }
+  }
+
+  /// 播放
+  void play() async {
+    if (index != null) {
+      String? url = await ioader.getVideoUrlById(list[index!].id);
+      print(url);
+    }
+  }
+}
+
+class HistoryPage extends StatefulWidget {
+  const HistoryPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _HistoryPageState();
+}
+
+class _HistoryPageState extends State<HistoryPage> {
+  final ioader = Ioader();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: FutureBuilder<List<Iideo>>(
+        future: ioader.getAllVideo(),
+        builder: (_, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return CircularProgressIndicator();
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 24,
+            ),
+            itemCount: snapshot.data?.length,
+            itemBuilder: (_, index) {
+              Iideo iideo = snapshot.data![index];
+              return Item(iideo: iideo);
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class Item extends StatefulWidget {
+  const Item({
+    super.key,
+    required this.iideo,
+  });
+
+  final Iideo iideo;
+
+  @override
+  State<StatefulWidget> createState() => _ItemState();
+}
+
+class _ItemState extends State<Item> {
+  Iideo get iideo => widget.iideo;
+  final ioader = Ioader();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Text(iideo.videoUrl),
+          StreamBuilder<Iideo?>(
+            stream: ioader.watchVideoById(iideo.id),
+            builder: (_, snapshot) {
+              double value = 0;
+              if (snapshot.connectionState == ConnectionState.active) {
+                value = snapshot.data!.received! / snapshot.data!.total!;
+              }
+              return Row(
+                children: [
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: value,
+                    ),
+                  ),
+                  Text(value.toStringAsFixed(2))
+                ],
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

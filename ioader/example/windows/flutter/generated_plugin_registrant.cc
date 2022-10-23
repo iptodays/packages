@@ -7,8 +7,11 @@
 #include "generated_plugin_registrant.h"
 
 #include <isar_flutter_libs/isar_flutter_libs_plugin.h>
+#include <r_get_ip_v3/r_get_ip_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   IsarFlutterLibsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("IsarFlutterLibsPlugin"));
+  RGetIpPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("RGetIpPlugin"));
 }

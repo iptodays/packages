@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 16:32:23
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-18 19:24:50
+ * @LastEditTime: 2022-10-23 22:34:49
  * @FilePath: /ioader/lib/src/http/ittp.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -122,6 +122,7 @@ class IttpClient {
               i3u8.end!,
               '${val.extinf}\n${iideo.received}.ts\n${i3u8.end}',
             ),
+            flush: true,
           );
           iideo.received = iideo.received! + 1;
           iideo.lastUpdateAt = DateTime.now().millisecondsSinceEpoch;

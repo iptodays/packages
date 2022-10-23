@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-18 19:25:45
+ * @LastEditTime: 2022-10-23 22:38:52
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -12,6 +12,7 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:ioader/src/extension/extension.dart';
 import 'package:ioader/src/http/ittp.dart';
+import 'package:ioader/src/server/ierver.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -110,7 +111,6 @@ class Ioader {
     if (iideo == null) {
       Directory directory = Directory(path);
       await directory.create(recursive: true);
-
       await _isar.writeTxn(() async {
         iideo = Iideo(
           id: id,
@@ -227,7 +227,19 @@ class Ioader {
   }
 
   /// 获取视频文件路径
-  String getVideoDirById(String id) {
-    return '$dir/$id/';
+  Future<String?> getVideoUrlById(String id) async {
+    if ((await getVideoById(id)) == null) {
+      Iogger.d('`$id` 不存在');
+      return null;
+    }
+    if (!Ierver.instance.runing) {
+      await Ierver.instance.start();
+    }
+    return '${Ierver.instance.domain}/$dir/$id/${id}_index.m3u8';
+  }
+
+  /// 关闭本地服务
+  Future<void> stopServer() async {
+    await Ierver.instance.stop();
   }
 }
