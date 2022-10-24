@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-24 21:30:58
+ * @LastEditTime: 2022-10-24 21:58:34
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -20,7 +20,7 @@ import 'log/log.dart';
 import 'models/iideo.dart';
 
 class Ioader {
-  late Future<bool> initialized;
+  bool initialized = false;
 
   /// 基础路径
   String get dir => _dir;
@@ -32,34 +32,31 @@ class Ioader {
   /// 当前时间戳
   int get _millisecondsSinceEpoch => DateTime.now().millisecondsSinceEpoch;
 
+  static Ioader get instance => Ioader._instanceFor();
   static Ioader? _instance;
-  factory Ioader([String dir = 'ioader']) {
-    _instance ??= Ioader._internal(dir);
-    return _instance!;
-  }
-
-  Ioader._internal([String dir = 'ioader']) {
-    _dir = dir;
-    initialized = Future<bool>(() async {
-      _isar = await Isar.open([IideoSchema]);
-      if (!dir.contains('/')) {
-        Directory directory;
-        if (Platform.isMacOS || Platform.isWindows) {
-          directory = (await getDownloadsDirectory())!;
-        } else {
-          directory = await getApplicationDocumentsDirectory();
-        }
-        _dir = '${directory.path}/$_dir';
-        Iogger.d(_dir);
-      }
-      return true;
-    });
-  }
+  factory Ioader._instanceFor() => _instance ??= Ioader._();
+  Ioader._();
 
   /// 初始化
-  static Future<bool> initialize([String dir = 'ioader']) {
+  Future<bool> initialize([String dir = 'ioader']) async {
+    if (initialized) {
+      return initialized;
+    }
     WidgetsFlutterBinding.ensureInitialized();
-    return Ioader(dir).initialized;
+    _dir = dir;
+    _isar = await Isar.open([IideoSchema]);
+    if (!dir.contains('/')) {
+      Directory directory;
+      if (Platform.isMacOS || Platform.isWindows) {
+        directory = (await getDownloadsDirectory())!;
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+      _dir = '${directory.path}/$_dir';
+      Iogger.d(_dir);
+    }
+    initialized = true;
+    return initialized;
   }
 
   /// 获取全部视频

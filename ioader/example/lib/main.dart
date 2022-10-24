@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 14:36:05
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-24 21:35:34
+ * @LastEditTime: 2022-10-24 21:55:15
  * @FilePath: /ioader/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -12,14 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:ioader/ioader.dart';
 
 void main() async {
-  await Ioader.initialize();
+  await Ioader.instance.initialize();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -56,8 +55,6 @@ class Video {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final ioader = Ioader();
-
   List<Video> list = [
     Video(
       id: '123',
@@ -169,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
   /// 下载
   void download() async {
     if (index != null) {
-      await ioader.put(
+      await Ioader.instance.put(
         list[index!].id,
         videoUrl: list[index!].videoUrl,
         coverUrl: list[index!].coverUrl,
@@ -180,14 +177,14 @@ class _MyHomePageState extends State<MyHomePage> {
   /// 删除
   void delete() async {
     if (index != null) {
-      ioader.removeVideoByIds([list[index!].id]);
+      Ioader.instance.removeVideoByIds([list[index!].id]);
     }
   }
 
   /// 播放
   void play() async {
     if (index != null) {
-      String? url = await ioader.getVideoUrlById(list[index!].id);
+      String? url = await Ioader.instance.getVideoUrlById(list[index!].id);
       print(url);
     }
   }
@@ -201,7 +198,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  final ioader = Ioader();
+  final ioader = Ioader.instance;
 
   @override
   void initState() {
@@ -249,7 +246,6 @@ class Item extends StatefulWidget {
 
 class _ItemState extends State<Item> {
   Iideo get iideo => widget.iideo;
-  final ioader = Ioader();
 
   @override
   void initState() {
@@ -262,7 +258,7 @@ class _ItemState extends State<Item> {
       children: [
         Text(iideo.videoUrl),
         StreamBuilder<Iideo?>(
-          stream: ioader.watchVideoById(iideo.id),
+          stream: Ioader.instance.watchVideoById(iideo.id),
           builder: (_, snapshot) {
             double value = 0;
             if (snapshot.connectionState == ConnectionState.active) {
