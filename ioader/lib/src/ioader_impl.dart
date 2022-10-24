@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-23 22:38:52
+ * @LastEditTime: 2022-10-24 21:30:58
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -104,7 +104,7 @@ class Ioader {
   Future<void> put(
     String id, {
     required String videoUrl,
-    required String coverUrl,
+    String? coverUrl,
   }) async {
     Iideo? iideo = await getVideoById(id);
     String path = '$dir/$id/';
@@ -119,9 +119,11 @@ class Ioader {
           createdAt: _millisecondsSinceEpoch,
         );
         _isar.iideos.put(iideo!);
-        await IttpClient.image(coverUrl, '$path${id}_cover');
-        iideo!.lastUpdateAt = _millisecondsSinceEpoch;
-        await _isar.iideos.put(iideo!);
+        if (coverUrl != null) {
+          await IttpClient.image(coverUrl, '$path${id}_cover');
+          iideo!.lastUpdateAt = _millisecondsSinceEpoch;
+          await _isar.iideos.put(iideo!);
+        }
         var result = await IttpClient.getSize(videoUrl);
         if (result is Map) {
           File file = File('$path${id}_http_index.m3u8');
@@ -236,6 +238,22 @@ class Ioader {
       await Ierver.instance.start();
     }
     return '${Ierver.instance.domain}/$dir/$id/${id}_index.m3u8';
+  }
+
+  /// 获取封面文件
+  Future<File?> getCoverFileById(String id) async {
+    Iideo? iideo = await getVideoById(id);
+    if (iideo == null || iideo.coverUrl == null) {
+      Iogger.d('`$id` 封面不存在');
+      return null;
+    }
+    File file = File('$dir/$id/${id}_cover');
+    bool isExists = await file.exists();
+    if (!isExists) {
+      Iogger.d('`$id` 封面不存在');
+      return null;
+    }
+    return file;
   }
 
   /// 关闭本地服务

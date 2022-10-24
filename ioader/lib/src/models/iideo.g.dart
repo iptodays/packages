@@ -85,7 +85,12 @@ int _iideoEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.coverUrl.length * 3;
+  {
+    final value = object.coverUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final value = object.i3u8;
     if (value != null) {
@@ -127,7 +132,7 @@ Iideo _iideoDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Iideo(
-    coverUrl: reader.readString(offsets[0]),
+    coverUrl: reader.readStringOrNull(offsets[0]),
     createdAt: reader.readLong(offsets[1]),
     i3u8: reader.readObjectOrNull<I3u8>(
       offsets[2],
@@ -153,7 +158,7 @@ P _iideoDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
@@ -283,8 +288,24 @@ extension IideoQueryWhere on QueryBuilder<Iideo, Iideo, QWhereClause> {
 }
 
 extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'coverUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'coverUrl',
+      ));
+    });
+  }
+
   QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -297,7 +318,7 @@ extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
   }
 
   QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -312,7 +333,7 @@ extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
   }
 
   QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -327,8 +348,8 @@ extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
   }
 
   QueryBuilder<Iideo, Iideo, QAfterFilterCondition> coverUrlBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1330,7 +1351,7 @@ extension IideoQueryProperty on QueryBuilder<Iideo, Iideo, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Iideo, String, QQueryOperations> coverUrlProperty() {
+  QueryBuilder<Iideo, String?, QQueryOperations> coverUrlProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'coverUrl');
     });

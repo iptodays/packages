@@ -35,7 +35,7 @@ class Iideo {
   late final String videoUrl;
 
   /// 封面原始url
-  late final String coverUrl;
+  String? coverUrl;
 
   /// 文件状态
   @enumerated
@@ -59,7 +59,7 @@ class Iideo {
   Iideo({
     required this.id,
     required this.videoUrl,
-    required this.coverUrl,
+    this.coverUrl,
     required this.createdAt,
     this.status = IoaderStatus.pending,
     this.i3u8,

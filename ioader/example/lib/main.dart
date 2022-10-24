@@ -2,12 +2,11 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 14:36:05
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-23 22:24:06
+ * @LastEditTime: 2022-10-24 21:35:34
  * @FilePath: /ioader/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
  */
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ioader/ioader.dart';
@@ -217,7 +216,7 @@ class _HistoryPageState extends State<HistoryPage> {
         future: ioader.getAllVideo(),
         builder: (_, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
           return ListView.builder(
             padding: const EdgeInsets.symmetric(
@@ -259,31 +258,29 @@ class _ItemState extends State<Item> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Text(iideo.videoUrl),
-          StreamBuilder<Iideo?>(
-            stream: ioader.watchVideoById(iideo.id),
-            builder: (_, snapshot) {
-              double value = 0;
-              if (snapshot.connectionState == ConnectionState.active) {
-                value = snapshot.data!.received! / snapshot.data!.total!;
-              }
-              return Row(
-                children: [
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: value,
-                    ),
+    return Column(
+      children: [
+        Text(iideo.videoUrl),
+        StreamBuilder<Iideo?>(
+          stream: ioader.watchVideoById(iideo.id),
+          builder: (_, snapshot) {
+            double value = 0;
+            if (snapshot.connectionState == ConnectionState.active) {
+              value = snapshot.data!.received! / snapshot.data!.total!;
+            }
+            return Row(
+              children: [
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: value,
                   ),
-                  Text(value.toStringAsFixed(2))
-                ],
-              );
-            },
-          )
-        ],
-      ),
+                ),
+                Text(value.toStringAsFixed(2))
+              ],
+            );
+          },
+        )
+      ],
     );
   }
 
