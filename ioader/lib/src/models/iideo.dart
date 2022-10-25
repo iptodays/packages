@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:49:02
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-11 15:01:49
+ * @LastEditTime: 2022-10-25 10:38:08
  * @FilePath: /ioader/lib/src/models/iideo.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -34,6 +34,9 @@ class Iideo {
   /// 视频原始url
   late final String videoUrl;
 
+  /// 名称
+  String? name;
+
   /// 封面原始url
   String? coverUrl;
 
@@ -60,6 +63,7 @@ class Iideo {
     required this.id,
     required this.videoUrl,
     this.coverUrl,
+    this.name,
     required this.createdAt,
     this.status = IoaderStatus.pending,
     this.i3u8,
@@ -73,6 +77,7 @@ class Iideo {
       'id': id,
       'videoUrl': videoUrl,
       'coverUrl': coverUrl,
+      'name': name,
       'createdAt': createdAt,
       'status': status,
       'total': total,

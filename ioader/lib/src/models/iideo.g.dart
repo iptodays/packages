@@ -43,24 +43,29 @@ const IideoSchema = CollectionSchema(
       name: r'lastUpdateAt',
       type: IsarType.long,
     ),
-    r'received': PropertySchema(
+    r'name': PropertySchema(
       id: 5,
+      name: r'name',
+      type: IsarType.string,
+    ),
+    r'received': PropertySchema(
+      id: 6,
       name: r'received',
       type: IsarType.long,
     ),
     r'status': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'status',
       type: IsarType.byte,
       enumMap: _IideostatusEnumValueMap,
     ),
     r'total': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'total',
       type: IsarType.long,
     ),
     r'videoUrl': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'videoUrl',
       type: IsarType.string,
     )
@@ -99,6 +104,12 @@ int _iideoEstimateSize(
     }
   }
   bytesCount += 3 + object.id.length * 3;
+  {
+    final value = object.name;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.videoUrl.length * 3;
   return bytesCount;
 }
@@ -119,10 +130,11 @@ void _iideoSerialize(
   );
   writer.writeString(offsets[3], object.id);
   writer.writeLong(offsets[4], object.lastUpdateAt);
-  writer.writeLong(offsets[5], object.received);
-  writer.writeByte(offsets[6], object.status.index);
-  writer.writeLong(offsets[7], object.total);
-  writer.writeString(offsets[8], object.videoUrl);
+  writer.writeString(offsets[5], object.name);
+  writer.writeLong(offsets[6], object.received);
+  writer.writeByte(offsets[7], object.status.index);
+  writer.writeLong(offsets[8], object.total);
+  writer.writeString(offsets[9], object.videoUrl);
 }
 
 Iideo _iideoDeserialize(
@@ -141,11 +153,12 @@ Iideo _iideoDeserialize(
     ),
     id: reader.readString(offsets[3]),
     lastUpdateAt: reader.readLongOrNull(offsets[4]),
-    received: reader.readLongOrNull(offsets[5]),
-    status: _IideostatusValueEnumMap[reader.readByteOrNull(offsets[6])] ??
+    name: reader.readStringOrNull(offsets[5]),
+    received: reader.readLongOrNull(offsets[6]),
+    status: _IideostatusValueEnumMap[reader.readByteOrNull(offsets[7])] ??
         IoaderStatus.pending,
-    total: reader.readLongOrNull(offsets[7]),
-    videoUrl: reader.readString(offsets[8]),
+    total: reader.readLongOrNull(offsets[8]),
+    videoUrl: reader.readString(offsets[9]),
   );
   return object;
 }
@@ -172,13 +185,15 @@ P _iideoDeserializeProp<P>(
     case 4:
       return (reader.readLongOrNull(offset)) as P;
     case 5:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
+      return (reader.readLongOrNull(offset)) as P;
+    case 7:
       return (_IideostatusValueEnumMap[reader.readByteOrNull(offset)] ??
           IoaderStatus.pending) as P;
-    case 7:
-      return (reader.readLongOrNull(offset)) as P;
     case 8:
+      return (reader.readLongOrNull(offset)) as P;
+    case 9:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -752,6 +767,150 @@ extension IideoQueryFilter on QueryBuilder<Iideo, Iideo, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterFilterCondition> nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Iideo, Iideo, QAfterFilterCondition> receivedIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1132,6 +1291,18 @@ extension IideoQuerySortBy on QueryBuilder<Iideo, Iideo, QSortBy> {
     });
   }
 
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
   QueryBuilder<Iideo, Iideo, QAfterSortBy> sortByReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'received', Sort.asc);
@@ -1242,6 +1413,18 @@ extension IideoQuerySortThenBy on QueryBuilder<Iideo, Iideo, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
   QueryBuilder<Iideo, Iideo, QAfterSortBy> thenByReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'received', Sort.asc);
@@ -1318,6 +1501,13 @@ extension IideoQueryWhereDistinct on QueryBuilder<Iideo, Iideo, QDistinct> {
     });
   }
 
+  QueryBuilder<Iideo, Iideo, QDistinct> distinctByName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Iideo, Iideo, QDistinct> distinctByReceived() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'received');
@@ -1378,6 +1568,12 @@ extension IideoQueryProperty on QueryBuilder<Iideo, Iideo, QQueryProperty> {
   QueryBuilder<Iideo, int?, QQueryOperations> lastUpdateAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastUpdateAt');
+    });
+  }
+
+  QueryBuilder<Iideo, String?, QQueryOperations> nameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'name');
     });
   }
 
