@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-24 21:58:34
+ * @LastEditTime: 2022-10-25 13:06:09
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -101,6 +101,7 @@ class Ioader {
   Future<void> put(
     String id, {
     required String videoUrl,
+    String? name,
     String? coverUrl,
   }) async {
     Iideo? iideo = await getVideoById(id);
@@ -111,6 +112,7 @@ class Ioader {
       await _isar.writeTxn(() async {
         iideo = Iideo(
           id: id,
+          name: name,
           videoUrl: videoUrl,
           coverUrl: coverUrl,
           createdAt: _millisecondsSinceEpoch,
