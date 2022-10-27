@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-23 21:24:04
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-23 22:33:03
+ * @LastEditTime: 2022-10-27 21:49:09
  * @FilePath: /ioader/lib/src/server/ierver.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -11,7 +11,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:ioader/src/log/log.dart';
-import 'package:r_get_ip_v3/r_get_ip.dart';
+import 'package:r_get_ip/r_get_ip.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 

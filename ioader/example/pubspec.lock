@@ -106,7 +106,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1+4"
+    version: "0.0.1+5"
   isar:
     dependency: transitive
     description:
@@ -233,10 +233,10 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
-  r_get_ip_v3:
+  r_get_ip:
     dependency: transitive
     description:
-      name: r_get_ip_v3
+      name: r_get_ip
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"

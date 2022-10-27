@@ -4,7 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   isar_flutter_libs
-  r_get_ip_v3
+  r_get_ip
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

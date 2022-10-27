@@ -1,6 +1,6 @@
 name: ioader
 description: 视频下载器
-version: 0.0.1+4
+version: 0.0.1+5
 homepage:
 
 environment:
@@ -21,8 +21,8 @@ dependencies:
   isar_flutter_libs: *isar_version
   # https://pub.dev/packages/shelf
   shelf: ^1.4.0
-  # https://pub.dev/packages/r_get_ip_v3
-  r_get_ip_v3: ^0.1.1
+  # https://pub.dev/packages/r_get_ip
+  r_get_ip: ^0.1.1
 
 dev_dependencies:
   flutter_test:
