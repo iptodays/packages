@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 14:36:05
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-24 21:55:15
+ * @LastEditTime: 2022-10-29 14:13:34
  * @FilePath: /ioader/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -56,6 +56,12 @@ class Video {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Video> list = [
+    Video(
+      id: 'aaa',
+      videoUrl: 'http://1.meiying.video:2100/20221027/erfKE3Nj/index.m3u8',
+      coverUrl:
+          'https://images.hdqwalls.com/wallpapers/bthumb/gandalf-and-the-balrog-5k-zn.jpg',
+    ),
     Video(
       id: '123',
       videoUrl: 'http://1.meiying.video:2100/20220509/ib16qrlp/index.m3u8',
