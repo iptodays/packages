@@ -1,6 +1,6 @@
 name: imobile_ads
 description: admob & unity
-version: 0.0.6+1
+version: 0.0.6+2
 homepage:
 
 environment:
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   # https://pub.dev/packages/google_mobile_ads
-  google_mobile_ads: ^2.1.0
+  google_mobile_ads: ^2.2.0
   # https://pub.dev/packages/unity_ads_plugin
   unity_ads_plugin: ^0.3.7
 
