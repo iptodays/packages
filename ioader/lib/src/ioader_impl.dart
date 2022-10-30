@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-25 13:06:09
+ * @LastEditTime: 2022-10-30 14:05:49
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -38,7 +38,9 @@ class Ioader {
   Ioader._();
 
   /// 初始化
-  Future<bool> initialize([String dir = 'ioader']) async {
+  Future<bool> initialize({
+    String dir = 'ioader',
+  }) async {
     if (initialized) {
       return initialized;
     }
@@ -56,6 +58,12 @@ class Ioader {
       Iogger.d(_dir);
     }
     initialized = true;
+    List<Iideo> iideos = await getVideos(IoaderStatus.inProgress);
+    if (iideos.isNotEmpty) {
+      for (var iideo in iideos) {
+        put(iideo.id, videoUrl: iideo.videoUrl);
+      }
+    }
     return initialized;
   }
 
@@ -143,7 +151,7 @@ class Ioader {
         iideo!.received = 0;
         await _isar.iideos.put(iideo!);
       });
-    } else {}
+    }
     IttpClient.download(iideo!, path, _isar);
   }
 
