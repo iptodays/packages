@@ -2,14 +2,16 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-09 14:36:05
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-29 14:13:34
+ * @LastEditTime: 2022-11-01 19:09:06
  * @FilePath: /ioader/example/lib/main.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
  */
 
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:ioader/ioader.dart';
+import 'package:video_player/video_player.dart';
 
 void main() async {
   await Ioader.instance.initialize();
@@ -154,13 +156,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.white,
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: play,
-                  child: const Icon(
-                    Icons.play_arrow_rounded,
-                    color: Colors.white,
-                  ),
-                ),
               ],
             ),
           ],
@@ -184,14 +179,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void delete() async {
     if (index != null) {
       Ioader.instance.removeVideoByIds([list[index!].id]);
-    }
-  }
-
-  /// 播放
-  void play() async {
-    if (index != null) {
-      String? url = await Ioader.instance.getVideoUrlById(list[index!].id);
-      print(url);
     }
   }
 }
@@ -277,7 +264,30 @@ class _ItemState extends State<Item> {
                     value: value,
                   ),
                 ),
-                Text(value.toStringAsFixed(2))
+                Text(value.toStringAsFixed(2)),
+                Visibility(
+                  visible: iideo.status == IoaderStatus.completed,
+                  child: IconButton(
+                    onPressed: () async {
+                      String? url =
+                          await Ioader.instance.getVideoUrlById(iideo.id);
+                      if (url != null) {
+                        print(url);
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) {
+                              return PlayerPage(
+                                url: url,
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                    icon: Icon(Icons.play_arrow),
+                  ),
+                )
               ],
             );
           },
@@ -288,6 +298,44 @@ class _ItemState extends State<Item> {
 
   @override
   void dispose() {
+    super.dispose();
+  }
+}
+
+class PlayerPage extends StatefulWidget {
+  final String url;
+
+  const PlayerPage({super.key, required this.url});
+
+  @override
+  State<StatefulWidget> createState() => _PlayerPageState();
+}
+
+class _PlayerPageState extends State<PlayerPage> {
+  late ChewieController controller;
+
+  @override
+  void initState() {
+    controller = ChewieController(
+      videoPlayerController: VideoPlayerController.network(widget.url),
+      autoPlay: true,
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Chewie(
+        controller: controller,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.pause();
+    controller.dispose();
     super.dispose();
   }
 }
