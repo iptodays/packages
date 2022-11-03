@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-09-28 22:48:10
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-30 14:05:49
+ * @LastEditTime: 2022-11-03 22:25:02
  * @FilePath: /ioader/lib/src/ioader_impl.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved. 
@@ -236,13 +236,13 @@ class Ioader {
   }
 
   /// 获取视频文件路径
-  Future<String?> getVideoUrlById(String id) async {
+  Future<String?> getVideoUrlById(String id, {bool localhost = true}) async {
     if ((await getVideoById(id)) == null) {
       Iogger.d('`$id` 不存在');
       return null;
     }
     if (!Ierver.instance.runing) {
-      await Ierver.instance.start();
+      await Ierver.instance.start(localhost: localhost);
     }
     return '${Ierver.instance.domain}/$dir/$id/${id}_index.m3u8';
   }

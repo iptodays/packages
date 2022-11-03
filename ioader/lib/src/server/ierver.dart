@@ -2,7 +2,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2022-10-23 21:24:04
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2022-10-27 21:49:09
+ * @LastEditTime: 2022-11-03 22:26:34
  * @FilePath: /ioader/lib/src/server/ierver.dart
  * 
  * Copyright (c) 2022 by iptoday wangdong1221@outlook.com, All Rights Reserved.
@@ -28,17 +28,20 @@ class Ierver {
   bool _runing = false;
   HttpServer? server;
 
-  Future<String> start([int port = 0000]) async {
+  Future<String> start({
+    int port = 0000,
+    bool localhost = true,
+  }) async {
     if (_runing) {
       return domain!;
     }
-    String? ip = await RGetIp.internalIP;
+    String? ip = localhost ? 'localhost' : await RGetIp.internalIP;
     var handler = const Pipeline()
         .addMiddleware(
           logRequests(),
         )
         .addHandler(echoRequest);
-    server = await shelf_io.serve(handler, ip!, port);
+    server = await shelf_io.serve(handler, ip ??= 'localhost', port);
     server!.autoCompress = true;
     _domain = 'http://${server!.address.host}:${server!.port}';
     Iogger.d('Serving at $domain');
