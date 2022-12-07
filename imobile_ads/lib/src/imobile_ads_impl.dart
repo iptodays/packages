@@ -28,7 +28,6 @@ class ImobileAds {
     dynamic Function(UnityAdsInitializationError, String)? onFailed,
   }) async {
     _testMode = testMode;
-
     if (unityId != null) {
       await UnityAds.init(
         gameId: unityId,
@@ -37,6 +36,9 @@ class ImobileAds {
         onComplete: onComplete,
         onFailed: onFailed,
       );
+      for (var element in PrivacyConsentType.values) {
+        await UnityAds.setPrivacyConsent(element, true);
+      }
     }
     InitializationStatus status = await MobileAds.instance.initialize();
     _initialized = true;

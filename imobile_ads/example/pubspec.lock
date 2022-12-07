@@ -73,14 +73,14 @@ packages:
       name: google_mobile_ads
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   imobile_ads:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.0.6+2"
+    version: "0.0.6+3"
   lints:
     dependency: transitive
     description:
