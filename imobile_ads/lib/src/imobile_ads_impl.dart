@@ -151,7 +151,7 @@ class ImobileAds {
   }
 
   /// 插页式广告
-  static Future<void> interstitialAd({
+  static Future<void> admobInterstitialAd({
     required String id,
     void Function(IAdmobFullScreenAdState)? callback,
   }) async {
@@ -205,7 +205,7 @@ class ImobileAds {
   }
 
   /// 激励广告
-  static Future<void> rewardedAd({
+  static Future<void> admobRewardedAd({
     required String id,
     void Function(IAdmobRewardedAdState)? callback,
   }) async {
@@ -265,7 +265,7 @@ class ImobileAds {
   }
 
   /// 激励插页广告
-  static Future<void> rewardedInterstitialAd({
+  static Future<void> admobRewardedInterstitialAd({
     required String id,
     void Function(IAdmobRewardedAdState)? callback,
   }) async {
@@ -340,9 +340,9 @@ class ImobileAds {
   }
 
   /// Unity 视频广告
-  static Future<void> unityAd({
+  static Future<void> unityVideoAd({
     required String placementId,
-    void Function(IUnityVideoAdState)? state,
+    void Function(IUnityVideoAdState)? callback,
   }) async {
     UnityAds.load(
       placementId: placementId,
@@ -350,30 +350,30 @@ class ImobileAds {
         await UnityAds.showVideoAd(
           placementId: placementId,
           onStart: (_) {
-            if (state != null) {
-              state(IUnityVideoAdState.start);
+            if (callback != null) {
+              callback(IUnityVideoAdState.start);
             }
           },
           onSkipped: (_) {
-            if (state != null) {
-              state(IUnityVideoAdState.skipped);
+            if (callback != null) {
+              callback(IUnityVideoAdState.skipped);
             }
           },
           onComplete: (_) {
-            if (state != null) {
-              state(IUnityVideoAdState.complete);
+            if (callback != null) {
+              callback(IUnityVideoAdState.complete);
             }
           },
           onFailed: (_, error, message) {
-            if (state != null) {
-              state(IUnityVideoAdState.showFailed);
+            if (callback != null) {
+              callback(IUnityVideoAdState.showFailed);
             }
           },
         );
       },
       onFailed: (placementId, error, message) {
-        if (state != null) {
-          state(IUnityVideoAdState.loadFailed);
+        if (callback != null) {
+          callback(IUnityVideoAdState.loadFailed);
         }
       },
     );
