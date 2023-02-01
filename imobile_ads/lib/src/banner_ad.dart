@@ -119,6 +119,8 @@ class _IUnityBannerAdState extends State<IUnityBannerAd>
     with AutomaticKeepAliveClientMixin {
   bool? loaded;
 
+  bool refresh = false;
+
   Timer? timer;
 
   @override
@@ -131,13 +133,16 @@ class _IUnityBannerAdState extends State<IUnityBannerAd>
 
   Future<void> clocker() async {
     timer?.cancel();
+    await Future.delayed(const Duration(milliseconds: 100));
     timer = Timer(
       widget.duration!,
       () {
         setState(() {
-          loaded = null;
+          refresh = true;
         });
-        clocker();
+        Future.delayed(const Duration(milliseconds: 500)).then((value) {
+          refresh = false;
+        });
       },
     );
   }
@@ -149,26 +154,31 @@ class _IUnityBannerAdState extends State<IUnityBannerAd>
       return Container(
         height: widget.size.height.toDouble(),
         alignment: Alignment.center,
-        child: UnityBannerAd(
-          size: widget.size,
-          placementId: widget.id,
-          onLoad: (_) {
-            setState(() {
-              loaded = true;
-            });
-            if (widget.callback != null) {
-              widget.callback!(IUnityBannerAdState.loaded);
-            }
-          },
-          onFailed: (_, error, mgs) {
-            setState(() {
-              loaded = false;
-            });
-            if (widget.callback != null) {
-              widget.callback!(IUnityBannerAdState.loadFailed);
-            }
-          },
-        ),
+        child: refresh
+            ? const SizedBox()
+            : UnityBannerAd(
+                size: widget.size,
+                placementId: widget.id,
+                onLoad: (_) {
+                  setState(() {
+                    loaded = true;
+                  });
+                  if (widget.callback != null) {
+                    widget.callback!(IUnityBannerAdState.loaded);
+                  }
+                  if (widget.duration != null) {
+                    clocker();
+                  }
+                },
+                onFailed: (_, error, mgs) {
+                  setState(() {
+                    loaded = false;
+                  });
+                  if (widget.callback != null) {
+                    widget.callback!(IUnityBannerAdState.loadFailed);
+                  }
+                },
+              ),
       );
     }
     return const SizedBox();
