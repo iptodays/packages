@@ -137,11 +137,9 @@ class _IUnityBannerAdState extends State<IUnityBannerAd>
     timer = Timer(
       widget.duration!,
       () {
-        setState(() {
-          refresh = true;
-        });
-        Future.delayed(const Duration(milliseconds: 500)).then((value) {
-          refresh = false;
+        setState(() => refresh = true);
+        Future.delayed(const Duration(milliseconds: 100)).then((_) {
+          setState(() => refresh = false);
         });
       },
     );

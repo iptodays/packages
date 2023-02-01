@@ -52,7 +52,7 @@ class ImobileAds {
     }
     InitializationStatus status = await MobileAds.instance.initialize();
     if (testMode) {
-      print('admob初始化: $status');
+      print('admob初始化: ${status.adapterStatuses}');
     }
     _initialized = true;
     return _initialized;
