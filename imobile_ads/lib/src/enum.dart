@@ -1,17 +1,63 @@
 /*
- * @Author: iptoday 
- * @Date: 2022-05-08 16:59:11 
- * @Last Modified by:   iptoday 
- * @Last Modified time: 2022-05-08 16:59:11 
+ * @Author: iptoday wangdong1221@outlook.com
+ * @Date: 2023-02-01 14:01:39
+ * @LastEditors: iptoday wangdong1221@outlook.com
+ * @LastEditTime: 2023-02-01 14:12:34
+ * @FilePath: /imobile_ads/lib/src/enum.dart
+ * 
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
+/// admob 开屏
+enum IAdmobAppOpenAdState {
+  loaded,
+  loadFailed,
+  showed,
+  showFailed,
+  willDismiss,
+  dismissed,
+}
 
-enum ImobileAdsState {
-  loaded, // 加载完成
-  loadFailed, // 加载失败
-  showed, // 已显示
-  showFailed, // 显示失败
-  willDismiss, // 即将消失
-  dismissed, // 消失
-  skipped, // 跳过
-  earnedReward, // 获得奖励
+/// admob banner
+enum IAdmobBannerAdState {
+  loaded,
+  loadFailed,
+  opened,
+  closed,
+  willDismiss,
+}
+
+/// admob 全屏
+enum IAdmobFullScreenAdState {
+  loaded,
+  loadFailed,
+  showed,
+  showFailed,
+  willDismiss,
+  dismissed,
+}
+
+/// admob 激励
+enum IAdmobRewardedAdState {
+  loaded,
+  loadFailed,
+  showed,
+  showFailed,
+  earnedReward,
+  willDismiss,
+  dismissed,
+}
+
+/// unity banner
+enum IUnityBannerAdState {
+  loaded,
+  loadFailed,
+}
+
+/// unity 视频
+enum IUnityVideoAdState {
+  start,
+  loadFailed,
+  showFailed,
+  skipped,
+  complete,
 }

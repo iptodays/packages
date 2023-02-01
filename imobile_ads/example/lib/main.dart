@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:imobile_ads/imobile_ads.dart';
 
 void main() {
-  ImobileAds.rewardedAd(
-    id: '',
-    callback: (state, error) {},
-  );
   runApp(const MyApp());
 }
 

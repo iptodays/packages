@@ -4,10 +4,13 @@
  * @Last Modified by: iptoday
  * @Last Modified time: 2022-05-08 17:05:15
  */
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:imobile_ads/src/enum.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
+
+import 'enum.dart';
 
 class IAdmobBannerAd extends StatefulWidget {
   const IAdmobBannerAd({
@@ -21,7 +24,7 @@ class IAdmobBannerAd extends StatefulWidget {
 
   final AdSize size;
 
-  final void Function(ImobileAdsState, AdError?)? callback;
+  final void Function(IAdmobBannerAdState)? callback;
 
   @override
   State<StatefulWidget> createState() => _IAdmobBannerAdState();
@@ -41,7 +44,7 @@ class _IAdmobBannerAdState extends State<IAdmobBannerAd>
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.loaded, null);
+            widget.callback!(IAdmobBannerAdState.loaded);
           }
           loaded = true;
           setState(() {});
@@ -49,22 +52,22 @@ class _IAdmobBannerAdState extends State<IAdmobBannerAd>
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.loadFailed, error);
+            widget.callback!(IAdmobBannerAdState.loadFailed);
           }
         },
         onAdOpened: (ad) {
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.showed, null);
+            widget.callback!(IAdmobBannerAdState.opened);
           }
         },
         onAdClosed: (ad) {
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.dismissed, null);
+            widget.callback!(IAdmobBannerAdState.closed);
           }
         },
         onAdWillDismissScreen: (ad) {
           if (widget.callback != null) {
-            widget.callback!(ImobileAdsState.willDismiss, null);
+            widget.callback!(IAdmobBannerAdState.willDismiss);
           }
         },
       ),
@@ -84,7 +87,7 @@ class _IAdmobBannerAdState extends State<IAdmobBannerAd>
         child: AdWidget(ad: bannerAd),
       );
     }
-    return Container();
+    return const SizedBox();
   }
 
   @override
@@ -96,6 +99,7 @@ class IUnityBannerAd extends StatefulWidget {
     Key? key,
     required this.id,
     required this.size,
+    this.duration,
     this.callback,
   }) : super(key: key);
 
@@ -103,7 +107,9 @@ class IUnityBannerAd extends StatefulWidget {
 
   final BannerSize size;
 
-  final void Function(ImobileAdsState, AdError?)? callback;
+  final Duration? duration;
+
+  final void Function(IUnityBannerAdState)? callback;
 
   @override
   State<StatefulWidget> createState() => _IUnityBannerAdState();
@@ -113,9 +119,27 @@ class _IUnityBannerAdState extends State<IUnityBannerAd>
     with AutomaticKeepAliveClientMixin {
   bool? loaded;
 
+  Timer? timer;
+
   @override
   void initState() {
+    if (widget.duration != null) {
+      clocker();
+    }
     super.initState();
+  }
+
+  Future<void> clocker() async {
+    timer?.cancel();
+    timer = Timer(
+      widget.duration!,
+      () {
+        setState(() {
+          loaded = null;
+        });
+        clocker();
+      },
+    );
   }
 
   @override
@@ -132,18 +156,30 @@ class _IUnityBannerAdState extends State<IUnityBannerAd>
             setState(() {
               loaded = true;
             });
+            if (widget.callback != null) {
+              widget.callback!(IUnityBannerAdState.loaded);
+            }
           },
           onFailed: (_, error, mgs) {
             setState(() {
               loaded = false;
             });
+            if (widget.callback != null) {
+              widget.callback!(IUnityBannerAdState.loadFailed);
+            }
           },
         ),
       );
     }
-    return Container();
+    return const SizedBox();
   }
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 }
