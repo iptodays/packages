@@ -32,7 +32,7 @@ class IAdmobBannerAd extends StatefulWidget {
 
 class _IAdmobBannerAdState extends State<IAdmobBannerAd>
     with AutomaticKeepAliveClientMixin {
-  bool loaded = false;
+  bool isFailed = false;
 
   late BannerAd bannerAd;
 
@@ -46,14 +46,15 @@ class _IAdmobBannerAdState extends State<IAdmobBannerAd>
           if (widget.callback != null) {
             widget.callback!(IAdmobBannerAdState.loaded);
           }
-          loaded = true;
-          setState(() {});
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
           if (widget.callback != null) {
             widget.callback!(IAdmobBannerAdState.loadFailed);
           }
+          setState(() {
+            isFailed = true;
+          });
         },
         onAdOpened: (ad) {
           if (widget.callback != null) {
@@ -80,14 +81,14 @@ class _IAdmobBannerAdState extends State<IAdmobBannerAd>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (loaded) {
-      return Container(
-        height: widget.size.height.toDouble(),
-        alignment: Alignment.center,
-        child: AdWidget(ad: bannerAd),
-      );
+    if (isFailed) {
+      return const SizedBox();
     }
-    return const SizedBox();
+    return Container(
+      height: widget.size.height.toDouble(),
+      alignment: Alignment.center,
+      child: AdWidget(ad: bannerAd),
+    );
   }
 
   @override
@@ -117,28 +118,22 @@ class IUnityBannerAd extends StatefulWidget {
 
 class _IUnityBannerAdState extends State<IUnityBannerAd>
     with AutomaticKeepAliveClientMixin {
-  bool? loaded;
+  bool isFailed = false;
 
   bool refresh = false;
 
   Timer? timer;
 
-  @override
-  void initState() {
-    if (widget.duration != null) {
-      clocker();
-    }
-    super.initState();
-  }
-
   Future<void> clocker() async {
-    timer?.cancel();
-    await Future.delayed(const Duration(milliseconds: 50));
+    if (timer != null && timer!.isActive) {
+      timer?.cancel();
+    }
+    await Future.delayed(const Duration(milliseconds: 100));
     timer = Timer(
       widget.duration!,
       () {
         setState(() => refresh = true);
-        Future.delayed(const Duration(milliseconds: 50)).then((_) {
+        Future.delayed(const Duration(milliseconds: 100)).then((_) {
           setState(() => refresh = false);
         });
       },
@@ -148,38 +143,38 @@ class _IUnityBannerAdState extends State<IUnityBannerAd>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (loaded == null || loaded!) {
-      return Container(
-        height: widget.size.height.toDouble(),
-        alignment: Alignment.center,
-        child: refresh
-            ? const SizedBox()
-            : UnityBannerAd(
-                size: widget.size,
-                placementId: widget.id,
-                onLoad: (_) {
-                  setState(() {
-                    loaded = true;
-                  });
-                  if (widget.callback != null) {
-                    widget.callback!(IUnityBannerAdState.loaded);
-                  }
-                  if (widget.duration != null) {
-                    clocker();
-                  }
-                },
-                onFailed: (_, error, mgs) {
-                  setState(() {
-                    loaded = false;
-                  });
-                  if (widget.callback != null) {
-                    widget.callback!(IUnityBannerAdState.loadFailed);
-                  }
-                },
-              ),
-      );
+    if (isFailed) {
+      return const SizedBox();
     }
-    return const SizedBox();
+    return Container(
+      height: widget.size.height.toDouble(),
+      alignment: Alignment.center,
+      child: Builder(builder: (_) {
+        if (refresh) {
+          return const SizedBox();
+        }
+        return UnityBannerAd(
+          size: widget.size,
+          placementId: widget.id,
+          onLoad: (_) {
+            if (widget.callback != null) {
+              widget.callback!(IUnityBannerAdState.loaded);
+            }
+            if (widget.duration != null) {
+              clocker();
+            }
+          },
+          onFailed: (_, error, mgs) {
+            setState(() {
+              isFailed = true;
+            });
+            if (widget.callback != null) {
+              widget.callback!(IUnityBannerAdState.loadFailed);
+            }
+          },
+        );
+      }),
+    );
   }
 
   @override
