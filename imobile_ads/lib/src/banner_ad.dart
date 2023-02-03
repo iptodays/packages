@@ -165,12 +165,12 @@ class _IUnityBannerAdState extends State<IUnityBannerAd>
             }
           },
           onFailed: (_, error, mgs) {
-            setState(() {
-              isFailed = true;
-            });
             if (widget.callback != null) {
               widget.callback!(IUnityBannerAdState.loadFailed);
             }
+            setState(() {
+              isFailed = true;
+            });
           },
         );
       }),
