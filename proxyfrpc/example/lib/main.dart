@@ -4,7 +4,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2023-02-09 17:39:03
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2023-02-09 21:29:29
+ * @LastEditTime: 2023-02-10 00:18:37
  * @FilePath: /proxyfrpc/example/lib/main.dart
  * 
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
               ),
               onPressed: () {
                 Proxyfrpc.instance.startSocks5(
-                  port: 6000,
+                  portAddr: {6000: null},
                   listen: (connection) {
                     print(
                       '${connection.address.address}:${connection.port} ==> ${connection.desiredAddress.address}:${connection.desiredPort}',
@@ -91,16 +91,30 @@ class _MyAppState extends State<MyApp> {
               onPressed: () async {
                 String cfg = '''
 [common]
-server_addr = xxx.xx.xx.xx
-server_port = xxxx
-token = xxxxx
+server_addr = xxx.xxx.xx.xx
+server_port = xxx
+token = xxxxxxxx
 login_fail_exit = false
 
-[Proxyfrpc]
+[Proxyfrpc_tcp]
 type = tcp
 local_ip = 127.0.0.1
 local_port = xxxx
 remote_port = xxxx
+
+[Proxyfrpc_stcp]
+type = stcp
+local_ip = 127.0.0.1
+local_port = xxxx
+sk = 12345678
+
+[Proxyfrpc_stcp_visitor]
+type = stcp
+role = visitor
+server_name = xxx
+sk = abcdefg
+bind_addr = 127.0.0.1
+bind_port = 6000
 ''';
                 Directory supportDir = await getApplicationSupportDirectory();
                 File file = File('${supportDir.path}/frpc.ini');
