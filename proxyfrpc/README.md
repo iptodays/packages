@@ -1,17 +1,36 @@
 # proxyfrpc
 
-[frp](https://github.com/fatedier/frp)
+基于[frp](https://github.com/fatedier/frp)实现的内网穿透socks代理.
 
-A new Flutter project.
+``` socks5
+// 启动socks5
+Proxyfrpc.instance.startSocks5(portAddr: {6000: null});
 
-## Getting Started
+// 关闭socks5
+Proxyfrpc.instance.stopSocks5();
+```
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+``` frpc
+// 启动frpc
+String cfg = '''
+[common]
+server_addr = xxx.xxx.xx.xx
+server_port = xxxx
+token = xxxxxxxx
+login_fail_exit = false
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[Proxyfrpc_tcp]
+type = tcp
+local_ip = 127.0.0.1
+local_port = xxxx
+remote_port = xxxx
+''';
+Directory supportDir = await getApplicationSupportDirectory();
+File file = File('${supportDir.path}/frpc.ini');
+file.createSync(recursive: true);
+file.writeAsStringSync(cfg);
+Proxyfrpc.instance.startFRPC( uid: 'test1', cfgFilePath: file.path);
 
+// 关闭frpc
+Proxyfrpc.instance.stopFRPC(uid: 'test1');
+```
