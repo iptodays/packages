@@ -4,7 +4,7 @@
  * @Author: iptoday wangdong1221@outlook.com
  * @Date: 2023-02-09 17:39:03
  * @LastEditors: iptoday wangdong1221@outlook.com
- * @LastEditTime: 2023-02-10 00:18:37
+ * @LastEditTime: 2023-02-10 12:07:11
  * @FilePath: /proxyfrpc/example/lib/main.dart
  * 
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
@@ -58,6 +58,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
               onPressed: () {
+                print('启动Socks5');
                 Proxyfrpc.instance.startSocks5(
                   portAddr: {6000: null},
                   listen: (connection) {
@@ -77,6 +78,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
               onPressed: () {
+                print('关闭Socks5');
                 Proxyfrpc.instance.stopSocks5();
               },
             ),
@@ -92,7 +94,7 @@ class _MyAppState extends State<MyApp> {
                 String cfg = '''
 [common]
 server_addr = xxx.xxx.xx.xx
-server_port = xxx
+server_port = xxxx
 token = xxxxxxxx
 login_fail_exit = false
 
@@ -118,6 +120,9 @@ bind_port = 6000
 ''';
                 Directory supportDir = await getApplicationSupportDirectory();
                 File file = File('${supportDir.path}/frpc.ini');
+                if (file.existsSync()) {
+                  file.deleteSync(recursive: true);
+                }
                 file.createSync(recursive: true);
                 file.writeAsStringSync(cfg);
                 Proxyfrpc.instance.startFRPC(
