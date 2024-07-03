@@ -4,16 +4,16 @@ version: 0.0.8+11
 homepage:
 
 environment:
-  sdk: ">=2.17.3 <3.0.0"
+  sdk: ">=2.17.3 <4.0.0"
   flutter: ">=3.3.2"
 
 dependencies:
   flutter:
     sdk: flutter
   # https://pub.dev/packages/google_mobile_ads
-  google_mobile_ads: ^3.0.0
+  google_mobile_ads: ^5.1.0
   # https://pub.dev/packages/unity_ads_plugin
-  unity_ads_plugin: ^0.3.8
+  unity_ads_plugin: ^0.3.17
 
 dev_dependencies:
   flutter_test:

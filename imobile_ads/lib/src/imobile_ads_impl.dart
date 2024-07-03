@@ -78,7 +78,6 @@ class ImobileAds {
   /// 开屏广告
   static Future<void> appOpenAd({
     required String id,
-    int orientation = AppOpenAd.orientationPortrait,
     void Function(IAdmobAppOpenAdState)? callback,
   }) async {
     String unitId = id;
@@ -127,7 +126,6 @@ class ImobileAds {
           }
         },
       ),
-      orientation: orientation,
     );
   }
 
